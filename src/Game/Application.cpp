@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "IState.hpp"
+#include "Util.hpp"
 #include "Version.hpp"
 
 #include <iostream>
@@ -23,5 +24,18 @@ bool Application::Init()
 
 bool Application::Run()
 {
+    while (true)
+    {
+        m_stateMan.BeginFrame();
+
+        auto* state = m_stateMan.GetState();
+        if (LIKELY(state))
+        {
+            // state->Update(); etc
+        }
+
+        m_stateMan.EndFrame();
+    }
+
     return true;
 }
