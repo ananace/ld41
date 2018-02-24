@@ -24,11 +24,15 @@ message(STATUS "Lib ${target}")
 configure_file(Version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${META_PROJECT_NAME}-Version.cpp)
 
 set(headers
+    IState.hpp
+    StateManager.hpp
+    Util.hpp
     Version.hpp
 )
 
 set(sources
-    ${CMAKE_CURRENT_BINARY_DIR}/${META_PROJECT_NAME}-Version.cpp
+    StateManager.cpp
+    ${META_PROJECT_NAME}-Version.cpp
 )
 
 

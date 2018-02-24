@@ -1,10 +1,12 @@
-#include <Version.hpp>
-#include <iostream>
+#include "Application.hpp"
 
 int main(int argc, char** argv)
 {
-    auto& ver = Version::GetVersion();
-    std::cout << "Version: " << ver.Major << "." << ver.Minor << "." << ver.Patch << " (" << ver.Revision << ")" << std::endl;
+    Application app;
 
-    return 0;
+    (void)argc;
+    (void)argv;
+
+    app.Init();
+    return app.Run() ? 0 : 1;
 }
