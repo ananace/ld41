@@ -1,0 +1,11 @@
+#include "Version.hpp"
+
+const Version& Version::GetVersion()
+{
+    static Version _ver = {
+        @META_VERSION_MAJOR@, @META_VERSION_MINOR@, @META_VERSION_PATCH@,
+        "@META_VERSION_REVISION@"
+    };
+
+    return _ver;
+}
