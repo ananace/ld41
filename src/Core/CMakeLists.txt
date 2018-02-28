@@ -25,6 +25,7 @@ configure_file(Version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${META_PROJECT_NAME}-V
 
 set(headers
     IState.hpp
+    Math.hpp
     StateManager.hpp
     Util.hpp
     Version.hpp
