@@ -25,12 +25,14 @@ configure_file(Version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${META_PROJECT_NAME}-V
 
 set(headers
     IState.hpp
+    Profiler.hpp
     StateManager.hpp
     Util.hpp
     Version.hpp
 )
 
 set(sources
+    Profiler.cpp
     StateManager.cpp
     ${META_PROJECT_NAME}-Version.cpp
 )

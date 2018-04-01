@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Profiler.hpp"
 #include "StateManager.hpp"
 
 class Application
@@ -15,5 +16,6 @@ public:
     bool Run();
 
 private:
+    Profiler m_profiler;
     StateManager m_stateMan;
 };
