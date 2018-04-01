@@ -36,7 +36,7 @@ void StateManager::PopState()
 
 void StateManager::BeginFrame()
 {
-    if (UNLIKELY(m_statesToRemove.empty()))
+    if (UNLIKELY(!m_statesToRemove.empty()))
     {
         for (auto& toRemove : m_statesToRemove)
         {
@@ -50,7 +50,7 @@ void StateManager::BeginFrame()
 
 void StateManager::EndFrame()
 {
-    if (UNLIKELY(m_statesToAdd.empty()))
+    if (UNLIKELY(!m_statesToAdd.empty()))
     {
         for (auto& toAdd : m_statesToAdd)
         {
