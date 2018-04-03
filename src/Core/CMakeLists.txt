@@ -2,7 +2,7 @@
 # External dependencies
 # 
 
-# find_package(THIRDPARTY REQUIRED)
+find_package(SFML 2.4 REQUIRED COMPONENTS audio graphics network window system)
 
 
 # 
@@ -25,6 +25,7 @@ configure_file(Version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${META_PROJECT_NAME}-V
 
 set(headers
     IState.hpp
+    InputManager.hpp
     Math.hpp
     Profiler.hpp
     StateManager.hpp
@@ -33,6 +34,7 @@ set(headers
 )
 
 set(sources
+    InputManager.cpp
     Profiler.cpp
     StateManager.cpp
     ${META_PROJECT_NAME}-Version.cpp
@@ -87,6 +89,7 @@ target_include_directories(${target}
 
     PUBLIC
     ${DEFAULT_INCLUDE_DIRECTORIES}
+    ${SFML_INCLUDE_DIR}
 
     INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -103,6 +106,8 @@ target_link_libraries(${target}
 
     PUBLIC
     ${DEFAULT_LIBRARIES}
+    ${SFML_LIBRARIES}
+    ${SFML_DEPENDENCIES}
 
     INTERFACE
 )

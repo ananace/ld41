@@ -190,7 +190,6 @@ const Profiler::ProfiledSection* Profiler::ProfiledSection::GetChild(std::size_t
 
 void Profiler::ProfiledSection::ForEach(const std::function<void(const ProfiledSection& section)>& iter) const
 {
-    std::cerr << "ForEach: " << GetName() << " = [" << Parent << ", " << Child << ", " << Sibling << "]" << std::endl;
     std::list<std::pair<Iterator, Iterator>> iterators;
     iterators.push_back(std::make_pair(begin(), end()));
 
@@ -224,7 +223,6 @@ std::ostream& operator<<(std::ostream& stream, const Profiler::ProfiledSection& 
     int level = 0;
     std::function<void(const Profiler::ProfiledSection&)> lambda;
     lambda = [&lambda, &level, &stream, section](const Profiler::ProfiledSection& it) {
-        std::cerr << "<<: " << it.GetName() << std::endl;
         std::string indent = "";
         for (int i = 0; i < level; ++i)
             indent += "  ";

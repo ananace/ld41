@@ -40,7 +40,7 @@ bool Application::Run()
         m_profiler.EndSection("StateManager"_profile);
 
         m_profiler.BeginSection("InputManager"_profile);
-        // TODO
+        m_inputMan.Update();
         m_profiler.EndSection("InputManager"_profile);
         m_profiler.EndSection("Prepare"_profile);
 
