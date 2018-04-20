@@ -19,6 +19,17 @@ public:
     bool Init();
     bool Run();
 
+    sf::Font& GetDefaultFont();
+    const sf::Font& GetDefaultFont() const;
+    sf::RenderTarget& GetRenderTarget();
+    const sf::RenderTarget& GetRenderTarget() const;
+    sf::View& GetGameView();
+    const sf::View& GetGameView() const;
+    sf::View& GetUIView();
+    const sf::View& GetUIView() const;
+
+    static const Application& GetSingleton();
+
 private:
     InputManager m_inputMan;
     Profiler m_profiler;
@@ -27,4 +38,6 @@ private:
     sf::Font m_defaultFont;
     sf::RenderWindow m_window;
     sf::View m_gameView, m_uiView;
+
+    static Application* s_singleton;
 };

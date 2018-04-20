@@ -15,11 +15,38 @@ public:
 
     StateManager& operator=(const StateManager&) = delete;
 
+    /** Create and push a new state.
+     *
+     * \tparam The state class to push
+     * \param args The constructor arguments to use 
+     *
+     * \note The state will be pushed onto the stack at the end of the frame.
+     *
+     * \sa PushState(std::unique_ptr<IState>)
+     * \sa PopState()
+     */
     template<typename T, typename... Args>
     void PushState(Args&&... args);
-    void PushState(std::unique_ptr<IState> a);
+    /** Push a pre-created state.
+     * 
+     * \param state The state to push onto the stack,
+     *              memory management will be claimed by the State Manager.
+     *
+     * \note The state will be pushed onto the stack at the end of the frame.
+     *
+     * \sa PushState(Args&&...)
+     * \sa PopState()
+     */
+    void PushState(std::unique_ptr<IState> state);
     const IState* GetState() const;
     IState* GetState();
+    /** Pop the current state.
+     *
+     * \note The clearing of memory will happen at the beginning of the next frame.
+     *
+     * \sa PushState(std::unique_ptr<IState>)
+     * \sa PushState(Args&&...)
+     */
     void PopState();
 
     void BeginFrame();

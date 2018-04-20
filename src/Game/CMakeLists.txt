@@ -9,13 +9,31 @@
 # Sources
 # 
 
-set(sources
+set(headers
     Application.hpp
+
+    States/IntroState.hpp
+    States/MenuState.hpp
+    States/GameState.hpp
+)
+
+set(sources
     Application.cpp
+
+    States/IntroState.cpp
+    States/MenuState.cpp
+    States/GameState.cpp
 
     main.cpp
 )
 
+# Group source files
+set(header_group "Header Files")
+set(source_group "Source Files")
+source_group_by_path(${CMAKE_CURRENT_SOURCE_DIR} "\\\\.h$|\\\\.hpp$|\\\\.inl$" 
+    ${header_group} ${headers})
+source_group_by_path(${CMAKE_CURRENT_SOURCE_DIR}  "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$|\\\\.inl$" 
+    ${source_group} ${sources})
 
 # 
 # Create executable
@@ -25,6 +43,7 @@ set(sources
 add_executable(${META_PROJECT_NAME}
     MACOSX_BUNDLE
     ${sources}
+    ${headers}
 )
 
 
@@ -46,7 +65,7 @@ set_target_properties(${META_PROJECT_NAME}
 target_include_directories(${META_PROJECT_NAME}
     PRIVATE
     ${DEFAULT_INCLUDE_DIRECTORIES}
-    ${PROJECT_BINARY_DIR}/source/include
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 

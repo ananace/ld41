@@ -5,6 +5,7 @@
 #include <algorithm>
 
 StateManager::StateManager()
+    : m_lastFrameTime({})
 {
 }
 
@@ -54,6 +55,7 @@ void StateManager::EndFrame()
     {
         for (auto& toAdd : m_statesToAdd)
         {
+            toAdd->m_stateManager = this;
             m_states.push_back(std::move(toAdd));
         }
         m_statesToAdd.clear();
@@ -74,5 +76,5 @@ const std::chrono::microseconds& StateManager::GetFrameTime() const noexcept
 }
 float StateManager::GetFrameTimeDT() const
 {
-    return std::chrono::duration_cast<std::chrono::duration<float>>(m_lastFrameTime).count();
+    return std::chrono::duration<float>(m_lastFrameTime).count();
 }

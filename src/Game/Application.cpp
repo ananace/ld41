@@ -4,6 +4,8 @@
 #include "Util.hpp"
 #include "Version.hpp"
 
+#include "States/IntroState.hpp"
+
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -11,12 +13,16 @@
 #include <iostream>
 #include <sstream>
 
+Application* Application::s_singleton = nullptr;
+
 Application::Application()
 {
+    s_singleton = this;
 }
 
 Application::~Application()
 {
+    s_singleton = nullptr;
 }
 
 bool Application::Init()
@@ -42,7 +48,7 @@ bool Application::Init()
     else
         std::cout << "Loaded default font; " << *it << std::endl;
 
-    m_profiler.AddSections({ "Prepare", "State", "Finalize", "InputManager", "StateManager", "Events" });
+    m_profiler.AddSections({ "Prepare", "State", "Finalize", "InputManager", "StateManager", "Events", "Overlay", "Draw" });
 
     return true;
 }
@@ -53,9 +59,21 @@ bool Application::Run()
     Version ver = Version::GetVersion();
 
     m_window.create(sf::VideoMode(800, 600), "LD41 " + ver.ToString(), sf::Style::Default);
+    m_window.setFramerateLimit(1000);
 
+    m_uiView = m_window.getDefaultView();
+    m_gameView = sf::View({0, 0, 1000, 1000});
+
+    m_stateMan.PushState<IntroState>();
+
+    unsigned int updates = 0,
+                 ups = 0;
+    float updateClock = 0;
+
+    std::string debugOverlay;
     while (m_window.isOpen())
     {
+        ++updates;
         m_profiler.BeginFrame();
 
         m_window.clear();
@@ -94,6 +112,7 @@ bool Application::Run()
                         sf::Vector2f gameSize = m_gameView.getSize();
                         gameSize.x = gameSize.y * ratio;
                         m_gameView.setSize(gameSize);
+                        m_gameView.setCenter(gameSize / 2.f);
                     }; break;
 
                 case sf::Event::Closed: m_window.close(); break;
@@ -110,35 +129,64 @@ bool Application::Run()
             state->Update();
 
             m_window.setView(m_gameView);
-            state->Draw();
+            state->Draw(m_window);
             m_gameView = m_window.getView();
 
             m_window.setView(m_uiView);
-            state->DrawUI();
+            state->DrawUI(m_window);
         }
         m_profiler.EndSection("State"_profile);
 
-        m_profiler.BeginSection("Finalize"_profile);
-        m_profiler.BeginSection("StateManager"_profile);
-        m_stateMan.EndFrame();
-        m_profiler.EndSection("StateManager"_profile);
-        m_profiler.EndSection("Finalize"_profile);
-
-        m_profiler.EndFrame();
-
         {
-            std::ostringstream oss;
-            oss << m_profiler.GetRoot();
-            sf::Text overlay(oss.str(), m_defaultFont, 9u);
+            sf::Text overlay(debugOverlay, m_defaultFont, 9u);
 
             m_window.setView(m_uiView);
             m_window.draw(overlay);
         }
 
+        m_profiler.BeginSection("Finalize"_profile);
+        m_profiler.BeginSection("StateManager"_profile);
+        m_stateMan.EndFrame();
+        m_profiler.EndSection("StateManager"_profile);
+
+        m_profiler.BeginSection("Draw"_profile);
         m_window.display();
+        m_profiler.EndSection("Draw"_profile);
+        m_profiler.EndSection("Finalize"_profile);
+
+        m_profiler.EndFrame();
+
+        std::ostringstream oss;
+        if (LIKELY(state))
+            oss << "[" << std::string(state->GetName()) << "] @ " << ups << "UPS" << std::endl;
+        oss << m_profiler.GetRoot();
+        debugOverlay = oss.str();
 
         m_stateMan.SetFrameTime(std::chrono::duration_cast<std::chrono::microseconds>(m_profiler.GetRoot().TotalTime));
+
+        updateClock += m_stateMan.GetFrameTimeDT();
+        if (updateClock >= 1)
+        {
+            ups = updates;
+            updateClock -= 1;
+            updates = 0;
+        }
     }
 
     return true;
+}
+
+
+sf::Font& Application::GetDefaultFont() { return m_defaultFont; }
+const sf::Font& Application::GetDefaultFont() const { return m_defaultFont; }
+sf::RenderTarget& Application::GetRenderTarget() { return m_window; }
+const sf::RenderTarget& Application::GetRenderTarget() const { return m_window; }
+sf::View& Application::GetGameView() { return m_gameView; }
+const sf::View& Application::GetGameView() const { return m_gameView; }
+sf::View& Application::GetUIView() { return m_uiView; }
+const sf::View& Application::GetUIView() const { return m_uiView; }
+
+const Application& Application::GetSingleton()
+{
+    return *s_singleton;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace sf { struct Event; }
+namespace sf { struct Event; class RenderTarget; }
 
 class StateManager;
 
@@ -21,8 +21,10 @@ public:
     virtual void Update() = 0;
     virtual bool Event(sf::Event&) { return false; }
 
-    virtual void Draw() const = 0;
-    virtual void DrawUI() const = 0;
+    virtual void Draw(sf::RenderTarget&) const = 0;
+    virtual void DrawUI(sf::RenderTarget&) const = 0;
+
+    virtual const char* GetName() const = 0;
 
 protected:
     inline const StateManager& GetStateManager() const { return *m_stateManager; }
