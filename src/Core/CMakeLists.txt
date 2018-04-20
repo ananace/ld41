@@ -27,6 +27,7 @@ set(headers
     IState.hpp
     InputManager.hpp
     Math.hpp
+    Math.inl
     Profiler.hpp
     StateManager.hpp
     StateManager.inl

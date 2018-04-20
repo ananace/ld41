@@ -1,5 +1,7 @@
 #pragma once
 
+namespace sf { struct Event; }
+
 class StateManager;
 
 class IState
@@ -9,12 +11,18 @@ public:
         : m_stateManager(nullptr)
     {
     }
-    virtual ~IState() {}
+    virtual ~IState()
+    {
+        m_stateManager = nullptr;
+    }
 
     inline bool IsAttached() const { return bool(m_stateManager); }
 
     virtual void Update() = 0;
-    virtual void Draw() = 0;
+    virtual bool Event(sf::Event&) { return false; }
+
+    virtual void Draw() const = 0;
+    virtual void DrawUI() const = 0;
 
 protected:
     inline const StateManager& GetStateManager() const { return *m_stateManager; }

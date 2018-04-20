@@ -15,7 +15,7 @@ void StateManager::PushState(std::unique_ptr<IState> a)
 
 const IState* StateManager::GetState() const
 {
-    if (m_states.empty())
+    if (UNLIKELY(m_states.empty()))
         return nullptr;
 
     return m_states.back().get();
@@ -23,7 +23,7 @@ const IState* StateManager::GetState() const
 
 IState* StateManager::GetState()
 {
-    if (m_states.empty())
+    if (UNLIKELY(m_states.empty()))
         return nullptr;
 
     return m_states.back().get();
