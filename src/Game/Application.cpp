@@ -27,6 +27,7 @@ bool Application::Init()
 
     std::string fonts[] = {
 #if defined(_WIN32)
+        "C:\\Windows\\Fonts\\consola.ttf"
 #else
         "/usr/share/fonts/corefonts/andalemo.ttf",
         "/usr/share/fonts/dejavu/DejaVuSansMono.ttf",
