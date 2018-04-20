@@ -13,6 +13,9 @@ public:
 
     inline bool IsAttached() const { return bool(m_stateManager); }
 
+    virtual void Update() = 0;
+    virtual void Draw() = 0;
+
 protected:
     inline const StateManager& GetStateManager() const { return *m_stateManager; }
     StateManager& GetStateManager() { return *m_stateManager; }

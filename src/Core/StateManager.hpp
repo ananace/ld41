@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <memory>
 #include <vector>
 
@@ -24,17 +25,20 @@ public:
     void BeginFrame();
     void EndFrame();
 
+    void SetFrameTime(float dt);
+    void SetFrameTime(const std::chrono::microseconds& us);
+    const std::chrono::microseconds& GetFrameTime() const noexcept;
+    float GetFrameTimeDT() const;
+
 private:
     std::vector<std::unique_ptr<IState>> m_states;
 
     // For delayed state sync
     std::vector<std::unique_ptr<IState>> m_statesToAdd;
     std::vector<IState*> m_statesToRemove;
+
+    // State tracking
+    std::chrono::microseconds m_lastFrameTime;
 };
 
-
-template<typename T, typename... Args>
-void StateManager::PushState(Args&&... args)
-{
-    PushState(std::make_unique<T>(std::forward<Args>(args)...));
-}
+#include "StateManager.inl"

@@ -4,6 +4,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+#include <cmath>
+
 InputManager::InputManager()
     : m_inputs(0)
 {
@@ -95,7 +97,7 @@ void InputManager::Update()
 
                 float value = sf::Joystick::getAxisPosition(axis.Joystick, sf::Joystick::Axis(axis.Axis));
                 bool wasNeg = value < 0;
-                value = abs(value);
+                value = std::abs(value);
 
                 if (axis.Negative == wasNeg)
                     input.CurrentValue = value / 100.f;

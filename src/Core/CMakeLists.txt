@@ -29,6 +29,7 @@ set(headers
     Math.hpp
     Profiler.hpp
     StateManager.hpp
+    StateManager.inl
     Util.hpp
     Version.hpp
 )

@@ -17,7 +17,7 @@ bool Application::Init()
 {
     auto& ver = Version::GetVersion();
     std::cout << "Starting..." << std::endl
-        << "Version: " << ver.Major << "." << ver.Minor << "." << ver.Patch << " (" << ver.Revision << ")" << std::endl;
+              << "Version: " << ver.Major << "." << ver.Minor << "." << ver.Patch << " (" << ver.Revision << ")" << std::endl;
 
     m_profiler.AddSections({ "Prepare", "Finalize", "InputManager", "StateManager", "Timesink" });
 
@@ -64,11 +64,14 @@ bool Application::Run()
 
         m_profiler.EndFrame();
 
+        m_stateMan.SetFrameTime(std::chrono::duration_cast<std::chrono::microseconds>(m_profiler.GetRoot().TotalTime));
+
         count += std::chrono::duration_cast<std::chrono::microseconds>(m_profiler.GetRoot().TotalTime);
 
         if (count.count() > 1000000)
         {
-            std::cout << "~" << (1000000 / std::chrono::duration_cast<std::chrono::microseconds>(m_profiler.GetRoot().TotalTime).count()) << " UPS (" << it << ")" << std::endl << m_profiler.GetRoot() << std::endl;
+            std::cout << "~" << (1000000 / std::chrono::duration_cast<std::chrono::microseconds>(m_profiler.GetRoot().TotalTime).count()) << " UPS (" << it << ")" << std::endl
+                      << m_profiler.GetRoot() << std::endl;
             count = {};
             it = 0;
         }

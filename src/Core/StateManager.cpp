@@ -59,3 +59,20 @@ void StateManager::EndFrame()
         m_statesToAdd.clear();
     }
 }
+
+void StateManager::SetFrameTime(float dt)
+{
+	m_lastFrameTime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::duration<float>(dt));
+}
+void StateManager::SetFrameTime(const std::chrono::microseconds& us)
+{
+	m_lastFrameTime = us;
+}
+const std::chrono::microseconds& StateManager::GetFrameTime() const noexcept
+{
+	return m_lastFrameTime;
+}
+float StateManager::GetFrameTimeDT() const
+{
+    return std::chrono::duration_cast<std::chrono::duration<float>>(m_lastFrameTime).count();
+}
