@@ -11,6 +11,7 @@
 
 set(headers
     Application.hpp
+    Inputs.hpp
 
     Asteroids/Asteroid.hpp
     Asteroids/Game.hpp

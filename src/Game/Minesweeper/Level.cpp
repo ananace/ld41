@@ -15,6 +15,7 @@ Level::Level(const sf::Vector2u& size, unsigned int mineCount)
 {
     Reset();
 }
+
 Level::~Level()
 {
 
@@ -60,6 +61,7 @@ void Level::Reveal(const sf::Vector2u& tile)
     if (MineCount(tile) == 0)
         FloodFill(tile);
 }
+
 bool Level::IsMine(const sf::Vector2u& tile) const
 {
     if (tile.x >= m_size.x || tile.y >= m_size.y)
@@ -67,6 +69,7 @@ bool Level::IsMine(const sf::Vector2u& tile) const
 
     return m_mines.at(tile.x + tile.y * m_size.x);
 }
+
 int Level::MineCount(const sf::Vector2u& tile) const
 {
     if (tile.x >= m_size.x || tile.y >= m_size.y)

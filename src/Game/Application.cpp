@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "Inputs.hpp"
 #include "IState.hpp"
 #include "Math.hpp"
 #include "Util.hpp"
@@ -49,6 +50,14 @@ bool Application::Init()
         std::cout << "Loaded default font; " << *it << std::endl;
 
     m_profiler.AddSections({ "Prepare", "State", "Finalize", "InputManager", "StateManager", "Events", "Overlay", "Draw" });
+
+    m_inputMan.Prepare(Input_Count);
+    m_inputMan[Input_Up].Bind = { InputManager::BindData::Bind_Keyboard, { { uint32_t(sf::Keyboard::Up), uint8_t(0) } } };
+    m_inputMan[Input_Down].Bind = { InputManager::BindData::Bind_Keyboard, { { uint32_t(sf::Keyboard::Down), uint8_t(0) } } };
+    m_inputMan[Input_Left].Bind = { InputManager::BindData::Bind_Keyboard, { { uint32_t(sf::Keyboard::Left), uint8_t(0) } } };
+    m_inputMan[Input_Right].Bind = { InputManager::BindData::Bind_Keyboard, { { uint32_t(sf::Keyboard::Right), uint8_t(0) } } };
+    m_inputMan[Input_Action].Bind = { InputManager::BindData::Bind_Keyboard, { { uint32_t(sf::Keyboard::Space), uint8_t(0) } } };
+    m_inputMan[Input_Cancel].Bind = { InputManager::BindData::Bind_Keyboard, { { uint32_t(sf::Keyboard::Escape), uint8_t(0) } } };
 
     return true;
 }
