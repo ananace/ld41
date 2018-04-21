@@ -48,7 +48,7 @@ void Level::Reset()
 
         m_mines[pos] = true;
         ++placed;
-    } while (placed < m_mineCount);
+    } while (placed < mineCount);
 }
 
 void Level::Reveal(const sf::Vector2u& tile)
@@ -59,7 +59,11 @@ void Level::Reveal(const sf::Vector2u& tile)
     m_revealed[tile.x + tile.y * m_size.x] = true;
 
     if (MineCount(tile) == 0)
-        FloodFill(tile);
+    {
+        std::vector<size_t> checked;
+        checked.reserve(10);
+        FloodFill(tile, checked);
+    }
 }
 
 bool Level::IsMine(const sf::Vector2u& tile) const
@@ -82,44 +86,34 @@ int Level::MineCount(const sf::Vector2u& tile) const
     count += IsMine({ tile.x + 1, tile.y + 0});
     count += IsMine({ tile.x + 1, tile.y + 1 });
     count += IsMine({ tile.x + 0, tile.y + 1 });
-    if (tile.x > 0)
-    {
-        count += IsMine({ tile.x - 1, tile.y + 1});
-        count += IsMine({ tile.x - 1, tile.y + 0 });
-    }
-    if (tile.y > 0)
-    {
-        count += IsMine({ tile.x + 0, tile.y - 1 });
-        count += IsMine({ tile.x + 1, tile.y - 1 });
-    }
-    if (tile.x > 0 && tile.y > 0)
-        count += IsMine({ tile.x - 1, tile.y - 1});
+    count += IsMine({ tile.x - 1, tile.y + 1});
+    count += IsMine({ tile.x - 1, tile.y + 0 });
+    count += IsMine({ tile.x + 0, tile.y - 1 });
+    count += IsMine({ tile.x + 1, tile.y - 1 });
+    count += IsMine({ tile.x - 1, tile.y - 1});
     return count;
 }
 
 void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
-    sf::Text revealText("0", Application::GetSingleton().GetDefaultFont());
+    states.transform *= getTransform();
+
+    sf::RectangleShape background({ m_size.x * 64.f, m_size.y * 64.f });
+    background.setFillColor(sf::Color::Red);
+    rt.draw(background, states);
+
+    sf::Text revealText("2", Application::GetSingleton().GetDefaultFont());
     {
         auto size = revealText.getLocalBounds();
-        revealText.setOrigin(size.width / 2.f, size.height / 2.f);
+        revealText.setOrigin((size.left + size.width) / 2.f, (size.top + size.height) / 2.f);
     }
 
     sf::RectangleShape boxShape({ 64, 64 });
-    boxShape.setOutlineColor(sf::Color::Black);
-    boxShape.setOutlineThickness(1);
+    // boxShape.setOutlineColor(sf::Color::Black);
+    // boxShape.setOutlineThickness(1);
     boxShape.setOrigin(32, 32);
 
     sf::VertexArray dropEffect(sf::Lines, 16);
-    dropEffect.append(sf::Vertex({0, 64}, sf::Color(0xff, 0xff, 0xff)));
-    dropEffect.append(sf::Vertex({0, 0}, sf::Color(0xff, 0xff, 0xff)));
-    dropEffect.append(sf::Vertex({0, 0}, sf::Color(0xff, 0xff, 0xff)));
-    dropEffect.append(sf::Vertex({64, 0}, sf::Color(0xff, 0xff, 0xff)));
-    dropEffect.append(sf::Vertex({64, 0}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({64, 64}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({64, 64}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({0, 64}, sf::Color(0xe1, 0xe1, 0xe1)));
-
     dropEffect.append(sf::Vertex({1, 63}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({1, 1}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({1, 1}, sf::Color(0xff, 0xff, 0xff)));
@@ -129,21 +123,33 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
     dropEffect.append(sf::Vertex({63, 63}, sf::Color(0xe1, 0xe1, 0xe1)));
     dropEffect.append(sf::Vertex({1, 63}, sf::Color(0xe1, 0xe1, 0xe1)));
 
-    states.transform *= getTransform();
+    dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xff, 0xff, 0xff)));
+    dropEffect.append(sf::Vertex({2, 2}, sf::Color(0xff, 0xff, 0xff)));
+    dropEffect.append(sf::Vertex({2, 2}, sf::Color(0xff, 0xff, 0xff)));
+    dropEffect.append(sf::Vertex({62, 2}, sf::Color(0xff, 0xff, 0xff)));
+    dropEffect.append(sf::Vertex({62, 2}, sf::Color(0xe1, 0xe1, 0xe1)));
+    dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe1, 0xe1, 0xe1)));
+    dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe1, 0xe1, 0xe1)));
+    dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xe1, 0xe1, 0xe1)));
 
+    sf::Vector2f startPos(32.f, 32.f);
     for (size_t i = 0; i < m_revealed.size(); ++i)
     {
         sf::Vector2u tile(i % m_size.x, i / m_size.x);
 
-        boxShape.setPosition(tile.x * 65, tile.y * 65);
-        boxShape.setFillColor(sf::Color(0xf0, 0xf0, 0xf0));
+        boxShape.setFillColor({ 0xf0, 0xf0, 0xf0 });
+        boxShape.setPosition(tile.x * 64, tile.y * 64);
+        boxShape.move(startPos);
+
+        if (m_revealed[i] && m_mines[i])
+            boxShape.setFillColor({ 0xff, 0x00, 0x00 });
 
         rt.draw(boxShape, states);
 
         if (!m_revealed[i])
         {
-            auto revealstates = states;
-            states.transform *= boxShape.getTransform();
+            sf::RenderStates revealstates(states);
+            revealstates.transform *= boxShape.getTransform();
             rt.draw(dropEffect, revealstates);
         }
 
@@ -165,34 +171,46 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
             default: revealText.setFillColor(sf::Color::Transparent); break;
         }
 
-        rt.draw(revealText, states);
+        if (m_revealed[i])
+            rt.draw(revealText, states);
     }
 }
 
-void Level::FloodFill(const sf::Vector2u& tile)
+void Level::FloodFill(const sf::Vector2u& tile, std::vector<size_t>& checked)
 {
     if (tile.x >= m_size.x || tile.y >= m_size.y)
         return;
 
     size_t offset = tile.x + m_size.x * tile.y;
 
+    if (std::find(checked.begin(), checked.end(), offset) != checked.end())
+        return;
+    checked.push_back(offset);
+
     if (m_mines[offset])
         return;
 
     m_revealed[offset] = true;
-    FloodFill({ tile.x + 1, tile.y + 0});
-    FloodFill({ tile.x + 1, tile.y + 1 });
-    FloodFill({ tile.x + 0, tile.y + 1 });
+    if (tile.x < m_size.x -1)
+        FloodFill({ tile.x + 1, tile.y + 0}, checked);
+    if (tile.y < m_size.y - 1)
+    {
+        if (tile.x < m_size.x -1)
+            FloodFill({ tile.x + 1, tile.y + 1 }, checked);
+        FloodFill({ tile.x + 0, tile.y + 1 }, checked);
+    }
     if (tile.x > 0)
     {
-        FloodFill({ tile.x - 1, tile.y + 1});
-        FloodFill({ tile.x - 1, tile.y + 0 });
+        if (tile.y < m_size.y - 1)
+            FloodFill({ tile.x - 1, tile.y + 1}, checked);
+        FloodFill({ tile.x - 1, tile.y + 0 }, checked);
     }
     if (tile.y > 0)
     {
-        FloodFill({ tile.x + 0, tile.y - 1 });
-        FloodFill({ tile.x + 1, tile.y - 1 });
+        FloodFill({ tile.x + 0, tile.y - 1 }, checked);
+        if (tile.x < m_size.x -1)
+            FloodFill({ tile.x + 1, tile.y - 1 }, checked);
     }
     if (tile.x > 0 && tile.y > 0)
-        FloodFill({ tile.x - 1, tile.y - 1});
+        FloodFill({ tile.x - 1, tile.y - 1}, checked);
 }

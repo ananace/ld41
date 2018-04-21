@@ -109,3 +109,12 @@ void InputManager::Update()
         }
     }
 }
+
+InputManager::Input& InputManager::operator[](std::size_t inp)
+{
+    return m_inputs.at(inp);
+}
+const InputManager::Input& InputManager::operator[](std::size_t inp) const
+{
+    return m_inputs.at(inp);
+}

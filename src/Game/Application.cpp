@@ -5,7 +5,7 @@
 #include "Util.hpp"
 #include "Version.hpp"
 
-#include "States/IntroState.hpp"
+#include "States/GameState.hpp"
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
@@ -73,7 +73,7 @@ bool Application::Run()
     m_uiView = m_window.getDefaultView();
     m_gameView = sf::View({0, 0, 1000, 1000});
 
-    m_stateMan.PushState<IntroState>();
+    m_stateMan.PushState<GameState>();
 
     unsigned int updates = 0,
                  ups = 0;

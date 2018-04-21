@@ -11,4 +11,4 @@ enum Inputs
     Input_Cancel,
 
     Input_Count
-}
+};

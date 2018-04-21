@@ -1,9 +1,20 @@
 #include "GameState.hpp"
+#include "StateManager.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
+#include "Minesweeper/Level.hpp"
+
+#include <random>
+
+Minesweeper::Level level = {};
+float rtime = 0;
+
 GameState::GameState()
 {
+    level.setPosition({ 200, 200 });
+    level.setOrigin({ (9.f*65.f)/2.f, (9.f*65.f)/2.f });
+    level.setScale(0.5f, 0.5f);
 }
 GameState::~GameState()
 {
@@ -12,7 +23,16 @@ GameState::~GameState()
 
 void GameState::Update()
 {
-
+    rtime += GetStateManager().GetFrameTimeDT();
+    
+    if (rtime >= 1.f)
+    {
+        rtime = 0;
+        
+        std::random_device dev;
+        std::uniform_int_distribution<unsigned int> dist(0, 8);
+        level.Reveal({ dist(dev), dist(dev) });
+    }
 }
 
 void GameState::Draw(sf::RenderTarget& rt) const
@@ -35,5 +55,5 @@ void GameState::Draw(sf::RenderTarget& rt) const
 
 void GameState::DrawUI(sf::RenderTarget& rt) const
 {
-
+    rt.draw(level);
 }
