@@ -12,6 +12,14 @@
 set(headers
     Application.hpp
 
+    Asteroids/Asteroid.hpp
+    Asteroids/Game.hpp
+    Asteroids/Level.hpp
+    Asteroids/Player.hpp
+
+    Minesweeper/Game.hpp
+    Minesweeper/Level.hpp
+
     States/IntroState.hpp
     States/MenuState.hpp
     States/GameState.hpp
@@ -19,6 +27,14 @@ set(headers
 
 set(sources
     Application.cpp
+
+    Asteroids/Asteroid.cpp
+    Asteroids/Game.cpp
+    Asteroids/Level.cpp
+    Asteroids/Player.cpp
+
+    Minesweeper/Game.hpp
+    Minesweeper/Level.cpp
 
     States/IntroState.cpp
     States/MenuState.cpp
