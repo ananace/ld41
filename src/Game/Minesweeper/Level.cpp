@@ -56,6 +56,9 @@ void Level::Reveal(const sf::Vector2u& tile)
         return;
 
     m_revealed[tile.x + tile.y * m_size.x] = true;
+
+    if (MineCount(tile) == 0)
+        FloodFill(tile);
 }
 bool Level::IsMine(const sf::Vector2u& tile) const
 {
@@ -161,4 +164,32 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 
         rt.draw(revealText, states);
     }
+}
+
+void Level::FloodFill(const sf::Vector2u& tile)
+{
+    if (tile.x >= m_size.x || tile.y >= m_size.y)
+        return;
+
+    size_t offset = tile.x + m_size.x * tile.y;
+
+    if (m_mines[offset])
+        return;
+
+    m_revealed[offset] = true;
+    FloodFill({ tile.x + 1, tile.y + 0});
+    FloodFill({ tile.x + 1, tile.y + 1 });
+    FloodFill({ tile.x + 0, tile.y + 1 });
+    if (tile.x > 0)
+    {
+        FloodFill({ tile.x - 1, tile.y + 1});
+        FloodFill({ tile.x - 1, tile.y + 0 });
+    }
+    if (tile.y > 0)
+    {
+        FloodFill({ tile.x + 0, tile.y - 1 });
+        FloodFill({ tile.x + 1, tile.y - 1 });
+    }
+    if (tile.x > 0 && tile.y > 0)
+        FloodFill({ tile.x - 1, tile.y - 1});
 }

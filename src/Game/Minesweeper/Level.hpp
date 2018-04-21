@@ -23,6 +23,8 @@ public:
     void draw(sf::RenderTarget&, sf::RenderStates) const;
 
 private:
+    void FloodFill(const sf::Vector2u& tile);
+
     sf::Vector2u m_size;
     unsigned int m_mineCount;
     std::vector<bool> m_mines;
