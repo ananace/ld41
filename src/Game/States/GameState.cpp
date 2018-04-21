@@ -7,13 +7,12 @@
 
 #include <random>
 
-Minesweeper::Level level = {};
+Minesweeper::Level level({30, 30});
 float rtime = 0;
 
 GameState::GameState()
 {
-    level.setPosition({ 200, 200 });
-    level.setOrigin({ (9.f*65.f)/2.f, (9.f*65.f)/2.f });
+    level.setPosition({ 15, 15 });
     level.setScale(0.5f, 0.5f);
 }
 GameState::~GameState()
@@ -24,13 +23,13 @@ GameState::~GameState()
 void GameState::Update()
 {
     rtime += GetStateManager().GetFrameTimeDT();
-    
+
     if (rtime >= 1.f)
     {
         rtime = 0;
-        
+
         std::random_device dev;
-        std::uniform_int_distribution<unsigned int> dist(0, 8);
+        std::uniform_int_distribution<unsigned int> dist(0, 29);
         level.Reveal({ dist(dev), dist(dev) });
     }
 }

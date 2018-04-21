@@ -56,6 +56,9 @@ void Level::Reveal(const sf::Vector2u& tile)
     if (tile.x >= m_size.x || tile.y >= m_size.y)
         return;
 
+    if (m_revealed[tile.x + tile.y * m_size.x])
+        return;
+
     m_revealed[tile.x + tile.y * m_size.x] = true;
 
     if (MineCount(tile) == 0)
@@ -98,8 +101,8 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 
-    sf::RectangleShape background({ m_size.x * 64.f, m_size.y * 64.f });
-    background.setFillColor(sf::Color::Red);
+    sf::RectangleShape background({ m_size.x * 65.f, m_size.y * 65.f });
+    background.setFillColor({ 0x80, 0x80, 0x80 });
     rt.draw(background, states);
 
     sf::Text revealText("2", Application::GetSingleton().GetDefaultFont());
@@ -118,27 +121,27 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
     dropEffect.append(sf::Vertex({1, 1}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({1, 1}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({63, 1}, sf::Color(0xff, 0xff, 0xff)));
-    dropEffect.append(sf::Vertex({63, 1}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({63, 63}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({63, 63}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({1, 63}, sf::Color(0xe1, 0xe1, 0xe1)));
+    dropEffect.append(sf::Vertex({63, 1}, sf::Color(0xe0, 0xe0, 0xe0)));
+    dropEffect.append(sf::Vertex({63, 63}, sf::Color(0xe0, 0xe0, 0xe0)));
+    dropEffect.append(sf::Vertex({63, 63}, sf::Color(0xe0, 0xe0, 0xe0)));
+    dropEffect.append(sf::Vertex({1, 63}, sf::Color(0xe0, 0xe0, 0xe0)));
 
     dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({2, 2}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({2, 2}, sf::Color(0xff, 0xff, 0xff)));
     dropEffect.append(sf::Vertex({62, 2}, sf::Color(0xff, 0xff, 0xff)));
-    dropEffect.append(sf::Vertex({62, 2}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe1, 0xe1, 0xe1)));
-    dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xe1, 0xe1, 0xe1)));
+    dropEffect.append(sf::Vertex({62, 2}, sf::Color(0xe0, 0xe0, 0xe1)));
+    dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe0, 0xe0, 0xe0)));
+    dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe0, 0xe0, 0xe0)));
+    dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xe0, 0xe0, 0xe0)));
 
     sf::Vector2f startPos(32.f, 32.f);
     for (size_t i = 0; i < m_revealed.size(); ++i)
     {
         sf::Vector2u tile(i % m_size.x, i / m_size.x);
 
-        boxShape.setFillColor({ 0xf0, 0xf0, 0xf0 });
-        boxShape.setPosition(tile.x * 64, tile.y * 64);
+        boxShape.setFillColor(m_revealed[i] ? sf::Color{ 0xe0, 0xe0, 0xe0 } : sf::Color{ 0xf0, 0xf0, 0xf0 });
+        boxShape.setPosition(tile.x * 65.01f, tile.y * 65.01f);
         boxShape.move(startPos);
 
         if (m_revealed[i] && m_mines[i])
@@ -191,6 +194,10 @@ void Level::FloodFill(const sf::Vector2u& tile, std::vector<size_t>& checked)
         return;
 
     m_revealed[offset] = true;
+
+    if (MineCount(tile) != 0)
+        return;
+
     if (tile.x < m_size.x -1)
         FloodFill({ tile.x + 1, tile.y + 0}, checked);
     if (tile.y < m_size.y - 1)
