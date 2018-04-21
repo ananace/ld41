@@ -83,10 +83,14 @@ public:
         float CurrentValue,
               LastValue;
 
-        inline bool IsPressed() const { return CurrentValue >= 0.5f; }
-        inline bool IsReleased() const { return CurrentValue < 0.5f; }
-        inline bool WasPressed() const { return LastValue >= 0.5f; }
-        inline bool WasReleased() const { return LastValue < 0.5f; }
+        inline bool IsPressStart() const { return IsPressed() && !WasPressed(); }
+        inline bool IsPressHold() const { return IsPressed() && WasPressed(); }
+        inline bool IsPressStop() const { return IsReleased() && !WasReleased(); }
+
+        inline bool IsPressed() const { return CurrentValue >= 0.55f; }
+        inline bool IsReleased() const { return CurrentValue < 0.45f; }
+        inline bool WasPressed() const { return LastValue >= 0.55f; }
+        inline bool WasReleased() const { return LastValue < 0.45f; }
     };
 
 private:
