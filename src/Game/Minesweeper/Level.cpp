@@ -21,7 +21,7 @@ Level::Level(const sf::Vector2u& size, unsigned int mineCount)
 #if defined(_WIN32)
         "resources\\bomb.png"
 #else
-        "resources/bomb.png"
+        "resources/bomb.png",
         "/usr/share/LD41/resources/bomb.png",
         "/usr/local/share/LD41/resources/bomb.png",
         "/app/share/LD41/resources/bomb.png",
