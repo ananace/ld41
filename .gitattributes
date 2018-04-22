@@ -1,0 +1,2 @@
+resources/MenuBackground.png filter=lfs diff=lfs merge=lfs -text
+resources/MenuBackground.xcf filter=lfs diff=lfs merge=lfs -text
