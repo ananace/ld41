@@ -2,7 +2,7 @@
 # External dependencies
 # 
 
-find_package(SFML 2.4 REQUIRED COMPONENTS audio graphics window system)
+find_package(SFML 2.4 REQUIRED COMPONENTS graphics window system)
 
 
 # 
