@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
+#include <iostream>
 #include <random>
 #include <string>
 
@@ -16,7 +17,20 @@ Level::Level(const sf::Vector2u& size, unsigned int mineCount)
 {
     Reset();
 
-    m_bombTexture.loadFromFile("resources/bomb.png");
+    const static std::string paths[] = {
+#if defined(_WIN32)
+        "resources\\bomb.png"
+#else
+        "resources/bomb.png"
+        "/usr/share/LD41/resources/bomb.png",
+        "/usr/local/share/LD41/resources/bomb.png",
+        "/app/share/LD41/resources/bomb.png",
+#endif
+    };
+
+    auto it = std::find_if(std::begin(paths), std::end(paths), [=](const std::string& file) { return m_bombTexture.loadFromFile(file); });
+    if (it == std::end(paths))
+        std::cout << "Failed to load bomb texture, continuing anyway" << std::endl;
 }
 
 Level::~Level()

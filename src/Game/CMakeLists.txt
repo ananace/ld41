@@ -125,3 +125,14 @@ target_link_libraries(${META_PROJECT_NAME}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
 )
+
+
+# 
+# Install information
+# 
+
+install(
+    TARGETS
+    ${META_PROJECT_NAME}
+    RUNTIME DESTINATION bin
+)

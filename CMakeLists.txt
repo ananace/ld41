@@ -97,3 +97,16 @@ include(cmake/CompileOptions.cmake)
 # 
 
 add_subdirectory(src)
+
+
+# 
+# Install information
+# 
+
+
+install(
+    FILES
+    resources/bomb.png
+    resources/MenuBackground.png
+    DESTINATION share/${META_PROJECT_NAME}/resources
+)

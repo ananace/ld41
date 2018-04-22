@@ -1,0 +1,37 @@
+{
+    "app-id": "com.ldjam.ananace.LD41",
+    "branch": "stable",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "3.28",
+    "sdk": "org.gnome.Sdk",
+    "command": "ld41",
+    "finish-args": [
+        "--share=ipc", "--socket=x11", "--device=dri"
+    ],
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/lib/*.la",
+        "/lib/*.a",
+        "/share/aclocal",
+        "/bin/c*", "/bin/i*", "/bin/n*", "/bin/r*", "/bin/s*", "/bin/t*",
+        "Makefile"
+    ],
+    "modules": [
+	"flatpak/shared-modules/udev/udev-175.json",
+        "flatpak/sfml-2.4.2.json",
+
+        {
+            "name": "LD41",
+            "buildsystem": "cmake-ninja",
+
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/ananace/ld41.git",
+                    "tag": "master"
+                }
+            ]
+        }
+    ]
+}

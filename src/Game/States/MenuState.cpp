@@ -9,9 +9,24 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
+#include <iostream>
+
 MenuState::MenuState()
 {
-    m_background.loadFromFile("resources/MenuBackground.png");
+    const static std::string paths[] = {
+#if defined(_WIN32)
+        "resources\\MenuBackground.png"
+#else
+        "resources/MenuBackground.png"
+        "/usr/share/LD41/resources/MenuBackground.png",
+        "/usr/local/share/LD41/resources/MenuBackground.png",
+        "/app/share/LD41/resources/MenuBackground.png",
+#endif
+    };
+
+    auto it = std::find_if(std::begin(paths), std::end(paths), [=](const std::string& file) { return m_background.loadFromFile(file); });
+    if (it == std::end(paths))
+        std::cout << "Failed to load menu background, continuing anyway" << std::endl;
 }
 MenuState::~MenuState()
 {
