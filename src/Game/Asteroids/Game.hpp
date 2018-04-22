@@ -13,8 +13,8 @@ public:
 
     void Update();
 
-    void Draw(sf::RenderTarget&);
-    void DrawUI(sf::RenderTarget&);
+    void Draw(sf::RenderTarget&) const;
+    void DrawUI(sf::RenderTarget&) const;
 
 private:
     Level m_level;

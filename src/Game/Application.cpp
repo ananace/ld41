@@ -6,6 +6,7 @@
 #include "Version.hpp"
 
 #include "States/GameState.hpp"
+#include "States/MenuState.hpp"
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
@@ -26,11 +27,20 @@ Application::~Application()
     s_singleton = nullptr;
 }
 
-bool Application::Init()
+bool Application::Init(int argc, char** argv)
 {
-    auto& ver = Version::GetVersion();
-    std::cout << "Starting..." << std::endl
-              << "Version: " << ver.Major << "." << ver.Minor << "." << ver.Patch << " (" << ver.Revision << ")" << std::endl;
+    for (int i = 1; i < argc; ++i)
+    {
+        if (std::string(argv[i]) == "-d")
+            m_debug =  true;
+    }
+
+    if (m_debug)
+    {
+        auto& ver = Version::GetVersion();
+        std::cout << "Starting..." << std::endl
+                << "Version: " << ver.Major << "." << ver.Minor << "." << ver.Patch << " (" << ver.Revision << ")" << std::endl;
+    }
 
     std::string fonts[] = {
 #if defined(_WIN32)
@@ -46,7 +56,7 @@ bool Application::Init()
     auto it = std::find_if(std::begin(fonts), std::end(fonts), [=](const std::string& file) { return m_defaultFont.loadFromFile(file); });
     if (it == std::end(fonts))
         std::cout << "No default font located, this could cause some issues, sorry." << std::endl;
-    else
+    else if (m_debug)
         std::cout << "Loaded default font; " << *it << std::endl;
 
     m_profiler.AddSections({ "Prepare", "State", "Finalize", "InputManager", "StateManager", "Events", "Overlay", "Draw" });
@@ -73,7 +83,7 @@ bool Application::Run()
     m_uiView = m_window.getDefaultView();
     m_gameView = sf::View({0, 0, 800, 600});
 
-    m_stateMan.PushState<GameState>();
+    m_stateMan.PushState<MenuState>();
 
     unsigned int updates = 0,
                  ups = 0;
@@ -145,6 +155,7 @@ bool Application::Run()
         }
         m_profiler.EndSection("State"_profile);
 
+        if (m_debug)
         {
             sf::Text overlay(debugOverlay, m_defaultFont, 9u);
 
@@ -164,11 +175,14 @@ bool Application::Run()
 
         m_profiler.EndFrame();
 
-        std::ostringstream oss;
-        if (LIKELY(state))
-            oss << "[" << std::string(state->GetName()) << "] @ " << ups << "UPS" << std::endl;
-        oss << m_profiler.GetRoot();
-        debugOverlay = oss.str();
+        if (m_debug)
+        {
+            std::ostringstream oss;
+            if (LIKELY(state))
+                oss << "[" << std::string(state->GetName()) << "] @ " << ups << "UPS" << std::endl;
+            oss << m_profiler.GetRoot();
+            debugOverlay = oss.str();
+        }
 
         m_stateMan.SetFrameTime(std::chrono::duration_cast<std::chrono::microseconds>(m_profiler.GetRoot().TotalTime));
 

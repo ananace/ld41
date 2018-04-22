@@ -16,7 +16,7 @@ public:
 
     Application& operator=(const Application&) = delete;
 
-    bool Init();
+    bool Init(int argc, char** argv);
     bool Run();
 
     sf::Font& GetDefaultFont();
@@ -44,6 +44,8 @@ private:
     sf::Font m_defaultFont;
     sf::RenderWindow m_window;
     sf::View m_gameView, m_uiView;
+
+    bool m_debug;
 
     static Application* s_singleton;
 };

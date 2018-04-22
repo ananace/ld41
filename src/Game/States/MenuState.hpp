@@ -2,6 +2,8 @@
 
 #include <IState.hpp>
 
+#include <SFML/Graphics/Texture.hpp>
+
 class MenuState : public IState
 {
 public:
@@ -14,5 +16,7 @@ public:
     void DrawUI(sf::RenderTarget&) const;
 
     const char* GetName() const { return "MenuState"; }
+
 private:
+    sf::Texture m_background;
 };

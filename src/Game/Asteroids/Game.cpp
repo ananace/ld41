@@ -29,7 +29,7 @@ void Game::Update()
         m_level.Reset();
 }
 
-void Game::Draw(sf::RenderTarget& rt)
+void Game::Draw(sf::RenderTarget& rt) const
 {
     auto view = rt.getView();
     auto hvsize = view.getSize() / 4.f;
@@ -41,7 +41,8 @@ void Game::Draw(sf::RenderTarget& rt)
 
     rt.draw(m_level);
 }
-void Game::DrawUI(sf::RenderTarget& rt)
+
+void Game::DrawUI(sf::RenderTarget& rt) const
 {
     
 }

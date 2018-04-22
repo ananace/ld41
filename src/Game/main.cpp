@@ -4,9 +4,6 @@ int main(int argc, char** argv)
 {
     Application app;
 
-    (void)argc;
-    (void)argv;
-
-    app.Init();
+    app.Init(argc, argv);
     return app.Run() ? 0 : 1;
 }

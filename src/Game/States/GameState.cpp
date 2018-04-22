@@ -3,13 +3,8 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
-#include "Minesweeper/Game.hpp"
-#include "Asteroids/Game.hpp"
 
 #include <random>
-
-Asteroids::Game asteroids;
-Minesweeper::Game game;
 
 GameState::GameState()
 {
@@ -21,8 +16,8 @@ GameState::~GameState()
 
 void GameState::Update()
 {
-    game.Update();
-    asteroids.Update();
+    m_asteroids.Update();
+    m_minesweeper.Update();
 }
 
 void GameState::Draw(sf::RenderTarget& rt) const
@@ -30,15 +25,15 @@ void GameState::Draw(sf::RenderTarget& rt) const
     auto preView = rt.getView();
 
     sf::View asView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
-    sf::View msView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
-
     asView.setViewport({ 0, 0, 0.5, 1 });
-    rt.setView(asView);
-    asteroids.Draw(rt);
-
+    sf::View msView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
     msView.setViewport({ 0.5, 0, 1, 1 });
+
+    rt.setView(asView);
+    m_asteroids.Draw(rt);
+
     rt.setView(msView);
-    game.Draw(rt);
+    m_minesweeper.Draw(rt);
 
     rt.setView(preView);
 }
@@ -50,6 +45,6 @@ void GameState::DrawUI(sf::RenderTarget& rt) const
     sf::View msView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
     msView.setViewport({ 0.5, 0, 1, 1 });
 
-    asteroids.DrawUI(rt);
-    game.DrawUI(rt);
+    m_asteroids.DrawUI(rt);
+    m_minesweeper.DrawUI(rt);
 }

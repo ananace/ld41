@@ -113,7 +113,7 @@ const sf::Vector2u& Level::GetSize() const
 
 bool Level::IsLost() const
 {
-    return std::any_of(m_field.begin(), m_field.end(), [](uint8_t square) { return square & (k_flagMine | k_flagRevealed); });
+    return std::any_of(m_field.begin(), m_field.end(), [](uint8_t square) { return (square & (k_flagMine | k_flagRevealed)) == (k_flagMine | k_flagRevealed); });
 }
 
 bool Level::IsWon() const

@@ -48,9 +48,12 @@ void Game::Update()
         else
             m_level.Mark(m_cursor);
     }
+
+    if (m_level.IsLost())
+        m_level.Reset();
 }
 
-void Game::Draw(sf::RenderTarget& rt)
+void Game::Draw(sf::RenderTarget& rt) const
 {
     sf::RectangleShape background(rt.getView().getSize());
     background.setFillColor({ 0xe0, 0xe0, 0xe0 });
@@ -75,7 +78,8 @@ void Game::Draw(sf::RenderTarget& rt)
 
     rt.draw(cursor);
 }
-void Game::DrawUI(sf::RenderTarget& rt)
+
+void Game::DrawUI(sf::RenderTarget& rt) const
 {
 
 }
