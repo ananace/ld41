@@ -121,6 +121,6 @@ if (UNIX)
     install(
         FILES
         dist/com.ldjam.ananace.LD41.png
-        DESTINATION share/icons/hicolor/32x32/apps
+        DESTINATION share/icons/hicolor/512x512/apps
     )
 endif()
