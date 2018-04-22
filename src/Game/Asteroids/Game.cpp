@@ -27,7 +27,7 @@ void Game::Draw(sf::RenderTarget& rt)
     auto lsize = sf::Vector2f(2000, 2000);
     sf::FloatRect viewLimit(-1000 + hvsize.x + 16, -1000 + hvsize.y * 2 + 16, lsize.x - hvsize.x * 4 - 32, lsize.y - hvsize.y * 4 - 32);
 
-    view.setCenter(Math::constrain(viewLimit, m_level.GetPlayerPosition() - sf::Vector2f(96, 0)) + sf::Vector2f(view.getSize().x / 4.f, 0));
+    view.setCenter(Math::constrain(viewLimit, m_level.GetPlayerPosition() - sf::Vector2f(hvsize.x, 0)) + sf::Vector2f(view.getSize().x / 4.f, 0));
     rt.setView(view);
 
     rt.draw(m_level);
