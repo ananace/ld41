@@ -51,6 +51,8 @@ void Game::Update()
 
     if (m_level.IsLost())
         m_level.Reset();
+    if (m_level.IsWon())
+        m_level.Reset();
 }
 
 void Game::Draw(sf::RenderTarget& rt) const

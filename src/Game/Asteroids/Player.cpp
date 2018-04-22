@@ -13,6 +13,7 @@ using namespace Asteroids;
 Player::Player()
     : m_anim(0)
     , m_burnTime(0)
+    , m_accel(false)
 {
     m_shipShape.setPointCount(4);
     m_shipShape.setPoint(0, { 0, -20 });
@@ -53,11 +54,15 @@ void Player::Update()
 
     if (inp[Input_Up].IsPressed())
     {
+        m_accel = true;
         m_burnTime = std::max(0.5f, std::min(1.f, m_burnTime + dt * 0.75f));
         AddImpulse(m_burnTime * 50 * dt);
     }
     else
+    {
+        m_accel = false;
         m_burnTime = 0;
+    }
 
     float rot = (inp[Input_Right].CurrentValue - inp[Input_Left].CurrentValue) * 180;
     rotate(rot * dt);
@@ -87,7 +92,7 @@ void Player::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 
     rt.draw(m_shipShape, states);
 
-    if (inp[Input_Up].IsPressed())
+    if (m_accel)
     {
         states.transform.scale(m_burnTime * (1+cos(m_anim*8)/10), m_burnTime * (1+cos(m_anim*8)/10));
         rt.draw(m_exhaustShape, states);

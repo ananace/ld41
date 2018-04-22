@@ -26,6 +26,8 @@ private:
     sf::Vector2f m_velocity;
 
     float m_anim, m_burnTime;
+
+    bool m_accel;
 };
 
 }

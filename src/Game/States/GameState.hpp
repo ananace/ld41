@@ -21,4 +21,8 @@ public:
 private:
     Asteroids::Game m_asteroids;
     Minesweeper::Game m_minesweeper;
+
+    bool m_paused;
+
+    float m_pauseTime, m_cumulativePauseTime;
 };

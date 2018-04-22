@@ -118,7 +118,14 @@ bool Level::IsLost() const
 
 bool Level::IsWon() const
 {
-    return std::none_of(m_field.begin(), m_field.end(), [](uint8_t square) { return (square & (k_flagMine | k_flagMarked)) != (k_flagMarked | k_flagMine); });
+    return std::none_of(m_field.begin(), m_field.end(), [](uint8_t square) {
+        if ((square & k_flagMarked) != 0 && (square & k_flagMine) == 0)
+            return true; // Can't win with excessive marking
+        if ((square & k_flagMine) == 0)
+            return false; // Ignore mine-less tiles
+
+        return (square & (k_flagMine | k_flagMarked)) != (k_flagMarked | k_flagMine);
+    });
 }
 
 int Level::TotalMineCount() const

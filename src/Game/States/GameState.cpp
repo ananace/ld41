@@ -1,12 +1,17 @@
 #include "GameState.hpp"
-#include "StateManager.hpp"
 
+#include <Application.hpp>
+#include <Inputs.hpp>
+#include <StateManager.hpp>
+
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-
-
-#include <random>
+#include <SFML/Graphics/Text.hpp>
 
 GameState::GameState()
+    : m_paused(false)
+    , m_pauseTime(0)
+    , m_cumulativePauseTime(0)
 {
 }
 GameState::~GameState()
@@ -16,8 +21,22 @@ GameState::~GameState()
 
 void GameState::Update()
 {
-    m_asteroids.Update();
-    m_minesweeper.Update();
+    auto& inp = Application::GetSingleton().GetInputManager();
+
+    if (!m_paused)
+    {
+        m_asteroids.Update();
+        m_minesweeper.Update();
+    }
+    else
+    {
+        float dt = GetStateManager().GetFrameTimeDT();
+        m_pauseTime += dt;
+        m_cumulativePauseTime += dt;
+    }
+
+    if (inp[Input_Cancel].IsPressStart())
+        m_paused = !m_paused;
 }
 
 void GameState::Draw(sf::RenderTarget& rt) const
@@ -47,4 +66,21 @@ void GameState::DrawUI(sf::RenderTarget& rt) const
 
     m_asteroids.DrawUI(rt);
     m_minesweeper.DrawUI(rt);
+
+    if (m_paused)
+    {
+        sf::RectangleShape darken(rt.getView().getSize());
+        darken.setFillColor({ 0, 0, 0, uint8_t(std::min(m_pauseTime, 1.f) * 128) });
+
+        rt.draw(darken);
+
+        sf::Text pauseText("[ Paused ]", Application::GetSingleton().GetDefaultFont());
+        pauseText.setCharacterSize(38u);
+        pauseText.setOutlineColor(sf::Color::Black);
+        pauseText.setOutlineThickness(2.f);
+        auto rect = pauseText.getLocalBounds();
+        pauseText.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+        pauseText.setPosition(rt.getView().getCenter());
+        rt.draw(pauseText);
+    }
 }
