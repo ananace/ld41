@@ -51,3 +51,6 @@ Testing/
 
 # Compile commands
 compile_commands.json
+
+# Flatpak
+.flatpak-builder/

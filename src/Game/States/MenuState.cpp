@@ -17,7 +17,7 @@ MenuState::MenuState()
 #if defined(_WIN32)
         "resources\\MenuBackground.png"
 #else
-        "resources/MenuBackground.png"
+        "resources/MenuBackground.png",
         "/usr/share/LD41/resources/MenuBackground.png",
         "/usr/local/share/LD41/resources/MenuBackground.png",
         "/app/share/LD41/resources/MenuBackground.png",
