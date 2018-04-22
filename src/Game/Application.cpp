@@ -18,6 +18,7 @@
 Application* Application::s_singleton = nullptr;
 
 Application::Application()
+    : m_debug(false)
 {
     s_singleton = this;
 }
