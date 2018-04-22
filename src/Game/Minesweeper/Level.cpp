@@ -23,15 +23,10 @@ Level::~Level()
 
 void Level::Reset()
 {
-    m_mines.clear();
-    if (m_mines.size() != m_size.x * m_size.y)
-        m_mines.resize(m_size.x * m_size.y);
-    for (size_t it = 0; it < m_mines.size(); ++it)
-        m_mines[it] = false;
-    if (m_revealed.size() != m_size.x * m_size.y)
-        m_revealed.resize(m_size.x * m_size.y);
-    for (size_t it = 0; it < m_revealed.size(); ++it)
-        m_revealed[it] = false;
+    if (m_field.size() != m_size.x * m_size.y)
+        m_field.resize(m_size.x * m_size.y, 0);
+    for (auto& i : m_field)
+        i = 0;
 
     std::random_device dev;
     std::uniform_int_distribution<> dist(0, (m_size.x * m_size.y) - 1);
@@ -43,10 +38,10 @@ void Level::Reset()
     do
     {
         auto pos = dist(dev);
-        if (m_mines[pos])
+        if (m_field[pos] & k_flagMine)
             continue;
 
-        m_mines[pos] = true;
+        m_field[pos] |= k_flagMine;
         ++placed;
     } while (placed < mineCount);
 }
@@ -56,10 +51,10 @@ void Level::Reveal(const sf::Vector2u& tile)
     if (tile.x >= m_size.x || tile.y >= m_size.y)
         return;
 
-    if (m_revealed[tile.x + tile.y * m_size.x])
+    if (m_field[tile.x + tile.y * m_size.x] & (k_flagRevealed | k_flagMarked))
         return;
 
-    m_revealed[tile.x + tile.y * m_size.x] = true;
+    m_field[tile.x + tile.y * m_size.x] |= k_flagRevealed;
 
     if (MineCount(tile) == 0)
     {
@@ -69,12 +64,26 @@ void Level::Reveal(const sf::Vector2u& tile)
     }
 }
 
+void Level::Mark(const sf::Vector2u& tile)
+{
+    if (tile.x >= m_size.x || tile.y >= m_size.y)
+        return;
+
+    if (m_field[tile.x + tile.y * m_size.x] & k_flagRevealed)
+        return;
+
+    if (m_field[tile.x + tile.y * m_size.x] & k_flagMarked)
+        m_field[tile.x + tile.y * m_size.x] &= ~k_flagMarked;
+    else
+        m_field[tile.x + tile.y * m_size.x] |= k_flagMarked;
+}
+
 bool Level::IsMine(const sf::Vector2u& tile) const
 {
     if (tile.x >= m_size.x || tile.y >= m_size.y)
         return false;
 
-    return m_mines.at(tile.x + tile.y * m_size.x);
+    return m_field.at(tile.x + tile.y * m_size.x) & k_flagMine;
 }
 
 int Level::MineCount(const sf::Vector2u& tile) const
@@ -82,7 +91,7 @@ int Level::MineCount(const sf::Vector2u& tile) const
     if (tile.x >= m_size.x || tile.y >= m_size.y)
         return 0;
 
-    if (m_mines.at(tile.x + tile.y * m_size.x))
+    if (m_field.at(tile.x + tile.y * m_size.x) & k_flagMine)
         return -1;
 
     int count = 0;
@@ -97,11 +106,39 @@ int Level::MineCount(const sf::Vector2u& tile) const
     return count;
 }
 
+const sf::Vector2u& Level::GetSize() const
+{
+    return m_size;
+}
+
+bool Level::IsLost() const
+{
+    return std::any_of(m_field.begin(), m_field.end(), [](uint8_t square) { return square & (k_flagMine | k_flagRevealed); });
+}
+
+bool Level::IsWon() const
+{
+    return std::none_of(m_field.begin(), m_field.end(), [](uint8_t square) { return (square & (k_flagMine | k_flagMarked)) != (k_flagMarked | k_flagMine); });
+}
+
+int Level::TotalMineCount() const
+{
+    return std::count_if(m_field.begin(), m_field.end(), [](uint8_t square) { return square & k_flagMine; });
+}
+int Level::MarkedMineCount() const
+{
+    return std::count_if(m_field.begin(), m_field.end(), [](uint8_t square) { return square & k_flagMarked; });
+}
+int Level::RemainingMineCount() const
+{
+    return TotalMineCount() - MarkedMineCount();
+}
+
 void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 
-    sf::RectangleShape background({ m_size.x * 65.f, m_size.y * 65.f });
+    sf::RectangleShape background({ m_size.x * 65.75f, m_size.y * 65.75f });
     background.setFillColor({ 0x80, 0x80, 0x80 });
     rt.draw(background, states);
 
@@ -136,20 +173,22 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
     dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xe0, 0xe0, 0xe0)));
 
     sf::Vector2f startPos(32.f, 32.f);
-    for (size_t i = 0; i < m_revealed.size(); ++i)
+    for (size_t i = 0; i < m_field.size(); ++i)
     {
         sf::Vector2u tile(i % m_size.x, i / m_size.x);
 
-        boxShape.setFillColor(m_revealed[i] ? sf::Color{ 0xe0, 0xe0, 0xe0 } : sf::Color{ 0xf0, 0xf0, 0xf0 });
-        boxShape.setPosition(tile.x * 65.01f, tile.y * 65.01f);
+        boxShape.setFillColor((m_field[i] & k_flagRevealed) ? sf::Color{ 0xe0, 0xe0, 0xe0 } : sf::Color{ 0xf0, 0xf0, 0xf0 });
+        boxShape.setPosition(tile.x * 65.75f, tile.y * 65.75f);
         boxShape.move(startPos);
 
-        if (m_revealed[i] && m_mines[i])
+        if (m_field[i] & k_flagMarked)
+            boxShape.setFillColor({ 0x80, 0x00, 0x00 });
+        if ((m_field[i] & (k_flagMine | k_flagRevealed)) == (k_flagMine | k_flagRevealed))
             boxShape.setFillColor({ 0xff, 0x00, 0x00 });
 
         rt.draw(boxShape, states);
 
-        if (!m_revealed[i])
+        if ((m_field[i] & k_flagRevealed) == 0)
         {
             sf::RenderStates revealstates(states);
             revealstates.transform *= boxShape.getTransform();
@@ -174,7 +213,7 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
             default: revealText.setFillColor(sf::Color::Transparent); break;
         }
 
-        if (m_revealed[i])
+        if (m_field[i] & k_flagRevealed)
             rt.draw(revealText, states);
     }
 }
@@ -190,10 +229,11 @@ void Level::FloodFill(const sf::Vector2u& tile, std::vector<size_t>& checked)
         return;
     checked.push_back(offset);
 
-    if (m_mines[offset])
+    if (m_field[offset] & k_flagMine)
         return;
 
-    m_revealed[offset] = true;
+    m_field[offset] |= k_flagRevealed;
+    m_field[offset] &= ~k_flagMarked;
 
     if (MineCount(tile) != 0)
         return;

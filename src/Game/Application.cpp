@@ -71,7 +71,7 @@ bool Application::Run()
     m_window.setFramerateLimit(1000);
 
     m_uiView = m_window.getDefaultView();
-    m_gameView = sf::View({0, 0, 1000, 1000});
+    m_gameView = sf::View({0, 0, 800, 600});
 
     m_stateMan.PushState<GameState>();
 
@@ -116,12 +116,11 @@ bool Application::Run()
                         m_uiView.setSize(uiSize);
                         m_uiView.setCenter(uiSize / 2.f);
 
-                        float ratio = uiSize.x / uiSize.y;
-
+                        /*float ratio = uiSize.x / uiSize.x;
                         sf::Vector2f gameSize = m_gameView.getSize();
                         gameSize.x = gameSize.y * ratio;
                         m_gameView.setSize(gameSize);
-                        m_gameView.setCenter(gameSize / 2.f);
+                        m_gameView.setCenter(gameSize / 2.f);*/
                     }; break;
 
                 case sf::Event::Closed: m_window.close(); break;

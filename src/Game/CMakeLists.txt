@@ -34,7 +34,7 @@ set(sources
     Asteroids/Level.cpp
     Asteroids/Player.cpp
 
-    Minesweeper/Game.hpp
+    Minesweeper/Game.cpp
     Minesweeper/Level.cpp
 
     States/IntroState.cpp

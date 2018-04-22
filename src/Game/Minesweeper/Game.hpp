@@ -19,6 +19,7 @@ public:
 private:
     Level m_level;
     sf::Vector2u m_cursor;
+    float m_pressLength;
 };
 
 }
