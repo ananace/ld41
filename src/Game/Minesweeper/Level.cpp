@@ -152,11 +152,11 @@ bool Level::IsWon() const
 
 int Level::TotalMineCount() const
 {
-    return std::count_if(m_field.begin(), m_field.end(), [](uint8_t square) { return square & k_flagMine; });
+    return int(std::count_if(m_field.begin(), m_field.end(), [](uint8_t square) { return square & k_flagMine; }));
 }
 int Level::MarkedMineCount() const
 {
-    return std::count_if(m_field.begin(), m_field.end(), [](uint8_t square) { return square & k_flagMarked; });
+    return int(std::count_if(m_field.begin(), m_field.end(), [](uint8_t square) { return square & k_flagMarked; }));
 }
 int Level::RemainingMineCount() const
 {
@@ -207,7 +207,7 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
     sf::Vector2f startPos(32.f, 32.f);
     for (size_t i = 0; i < m_field.size(); ++i)
     {
-        sf::Vector2u tile(i % m_size.x, i / m_size.x);
+        sf::Vector2u tile((unsigned int)i % m_size.x, (unsigned int)i / m_size.x);
 
         boxShape.setFillColor((m_field[i] & k_flagRevealed) ? sf::Color{ 0xe0, 0xe0, 0xe0 } : sf::Color{ 0xf0, 0xf0, 0xf0 });
         boxShape.setPosition(tile.x * 65.75f, tile.y * 65.75f);

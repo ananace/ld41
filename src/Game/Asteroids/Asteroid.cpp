@@ -14,11 +14,11 @@ Asteroid::Asteroid(float size)
     , m_life(0)
 {
     std::random_device dev;
-    setRotation(std::uniform_real_distribution<>(0.f, Math::PI<float>() * 2)(dev));
-    m_rotSpeed = std::uniform_real_distribution<>(-22.5f, 22.5f)(dev);
+    setRotation(std::uniform_real_distribution<float>(0.f, Math::PI<float>() * 2)(dev));
+    m_rotSpeed = std::uniform_real_distribution<float>(-22.5f, 22.5f)(dev);
 
-    float pointCount = size * 1.1;
-    m_vertices.setPointCount(int(pointCount * std::uniform_real_distribution<>(0.75f, 1.25f)(dev)));
+    float pointCount = size * 1.1f;
+    m_vertices.setPointCount(int(pointCount * std::uniform_real_distribution<float>(0.75f, 1.25f)(dev)));
     for (size_t i = 0; i < m_vertices.getPointCount(); ++i)
     {
         float ang = ((Math::PI<float>() * 2.f) / m_vertices.getPointCount()) * i;

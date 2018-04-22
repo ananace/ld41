@@ -58,6 +58,7 @@ void Profiler::BeginSection(std::size_t strHash)
 }
 void Profiler::EndSection(std::size_t strHash)
 {
+	(void)strHash;
     assert(strHash == m_curNode->SectionHash);
 
     if (m_curNode->EndCall())

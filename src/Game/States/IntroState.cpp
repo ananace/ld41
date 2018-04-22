@@ -37,7 +37,7 @@ void IntroState::Draw(sf::RenderTarget& rt) const
     rect.setOrigin({250,250});
     rect.setFillColor(sf::Color::White);
 
-    //rt.draw(rect, states);
+    rt.draw(rect, states);
 }
 
 void IntroState::DrawUI(sf::RenderTarget&) const {}

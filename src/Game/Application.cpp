@@ -123,7 +123,7 @@ bool Application::Run()
                 switch (ev.type)
                 {
                 case sf::Event::Resized: {
-                        sf::Vector2f uiSize(ev.size.width, ev.size.height);
+                        sf::Vector2f uiSize(float(ev.size.width), float(ev.size.height));
                         m_uiView.setSize(uiSize);
                         m_uiView.setCenter(uiSize / 2.f);
 

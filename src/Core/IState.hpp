@@ -1,6 +1,6 @@
 #pragma once
 
-namespace sf { struct Event; class RenderTarget; }
+namespace sf { class Event; class RenderTarget; }
 
 class StateManager;
 

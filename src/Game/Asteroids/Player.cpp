@@ -87,7 +87,6 @@ sf::Vector2f Player::GetParallaxPosition(int level) const
 
 void Player::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
-    auto& inp = Application::GetSingleton().GetInputManager();
     states.transform *= getTransform();
 
     rt.draw(m_shipShape, states);
