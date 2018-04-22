@@ -5,6 +5,7 @@
 #include <Math.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 using namespace Asteroids;
 
@@ -56,5 +57,12 @@ void Game::Draw(sf::RenderTarget& rt) const
 
 void Game::DrawUI(sf::RenderTarget& rt) const
 {
-    
+    sf::Text scoreText("Score: " + std::to_string(m_level.GetScore()), Application::GetSingleton().GetDefaultFont());
+    scoreText.setCharacterSize(18u);
+    scoreText.setOutlineColor(sf::Color::Black);
+    scoreText.setOutlineThickness(2.f);
+    auto rect = scoreText.getLocalBounds();
+    scoreText.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+    scoreText.setPosition({ rt.getView().getCenter().x, rect.top + rect.height + 5 });
+    rt.draw(scoreText);
 }

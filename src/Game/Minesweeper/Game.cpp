@@ -5,12 +5,14 @@
 #include <Math.hpp>
 
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 using namespace Minesweeper;
 
 Game::Game()
     : m_pressLength(0)
     , m_time(0)
+    , m_size(9)
 {
     
 }
@@ -55,6 +57,7 @@ void Game::Update()
 
 void Game::Reset()
 {
+    m_level.SetSize(sf::Vector2u(m_size, m_size));
     m_level.Reset();
     m_time = 0;
 }
@@ -74,6 +77,21 @@ float Game::GetTime() const
     return m_time;
 }
 
+int Game::GetCurSize() const
+{
+    return m_level.GetSize().x;
+}
+
+int Game::GetSize() const
+{
+    return m_size;
+}
+
+void Game::SetSize(int size)
+{
+    m_size = size;
+}
+
 void Game::Draw(sf::RenderTarget& rt) const
 {
     sf::RectangleShape background(rt.getView().getSize());
@@ -91,8 +109,7 @@ void Game::Draw(sf::RenderTarget& rt) const
     auto lsize = sf::Vector2f(m_level.GetSize()) * 65.75f;
     sf::FloatRect viewLimit(hvsize.x, hvsize.y, lsize.x - hvsize.x * 2, lsize.y - hvsize.y * 2);
 
-    view.setSize(view.getSize().x * 2.f, view.getSize().y);
-    view.setCenter(Math::constrain(viewLimit, cursor.getPosition() + sf::Vector2f(32, 32)) + sf::Vector2f(view.getSize().x / 4.f, 0));
+    view.setCenter(Math::constrain(viewLimit, cursor.getPosition() + sf::Vector2f(32, 32)));
     rt.setView(view);
 
     rt.draw(m_level);
@@ -102,5 +119,19 @@ void Game::Draw(sf::RenderTarget& rt) const
 
 void Game::DrawUI(sf::RenderTarget& rt) const
 {
+    sf::Text scoreText("Mines: " + std::to_string(m_level.RemainingMineCount()), Application::GetSingleton().GetDefaultFont());
+    scoreText.setFillColor(sf::Color::Black);
+    scoreText.setCharacterSize(18u);
+    scoreText.setOutlineColor(sf::Color::White);
+    scoreText.setOutlineThickness(2.f);
+    auto rect = scoreText.getLocalBounds();
+    scoreText.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+    scoreText.setPosition({ rect.left + rect.width + 5, rect.top + rect.height + 5 });
+    rt.draw(scoreText);
 
+    scoreText.setString("Time: " + std::to_string(int(m_time)) + "s");
+    rect = scoreText.getLocalBounds();
+    scoreText.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+    scoreText.setPosition({ rt.getView().getSize().x - (rect.left + rect.width + 5), rect.top + rect.height + 5 });
+    rt.draw(scoreText);
 }

@@ -25,6 +25,7 @@ public:
     bool IsMine(const sf::Vector2u& tile) const;
     int MineCount(const sf::Vector2u& tile) const;
     const sf::Vector2u& GetSize() const;
+    void SetSize(const sf::Vector2u& size);
 
     bool IsLost() const;
     bool IsWon() const;

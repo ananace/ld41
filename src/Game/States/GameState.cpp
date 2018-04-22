@@ -10,6 +10,8 @@
 
 GameState::GameState()
     : m_paused(false)
+    , m_gameover(false)
+    , m_won(false)
     , m_pauseTime(0)
     , m_cumulativePauseTime(0)
 {
@@ -63,6 +65,18 @@ void GameState::Update()
         else
             m_paused = !m_paused;
     }
+
+    if (m_gameover)
+    {
+        if (inp[Input_Up].IsPressStart())
+            m_minesweeper.SetSize(m_minesweeper.GetSize() + 1);
+        else if (inp[Input_Down].IsPressStart())
+        {
+            int size = m_minesweeper.GetSize();
+            if (size > 5)
+                m_minesweeper.SetSize(size - 1);
+        }
+    }
 }
 
 void GameState::Draw(sf::RenderTarget& rt) const
@@ -72,7 +86,7 @@ void GameState::Draw(sf::RenderTarget& rt) const
     sf::View asView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
     asView.setViewport({ 0, 0, 0.5, 1 });
     sf::View msView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
-    msView.setViewport({ 0.5, 0, 1, 1 });
+    msView.setViewport({ 0.5, 0, 0.5, 1 });
 
     rt.setView(asView);
     m_asteroids.Draw(rt);
@@ -85,14 +99,18 @@ void GameState::Draw(sf::RenderTarget& rt) const
 
 void GameState::DrawUI(sf::RenderTarget& rt) const
 {
+    auto realView = rt.getView();
     sf::View asView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
     asView.setViewport({ 0, 0, 0.5, 1 });
     sf::View msView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
-    msView.setViewport({ 0.5, 0, 1, 1 });
+    msView.setViewport({ 0.5, 0, 0.5, 1 });
 
+    rt.setView(asView);
     m_asteroids.DrawUI(rt);
+    rt.setView(msView);
     m_minesweeper.DrawUI(rt);
 
+    rt.setView(realView);
     if (m_paused || m_gameover)
     {
         sf::RectangleShape darken(rt.getView().getSize());
@@ -126,7 +144,13 @@ void GameState::DrawUI(sf::RenderTarget& rt) const
 
         pauseText.move(0, rect.top + rect.height + 20);
         pauseText.setCharacterSize(20);
-        pauseText.setString("Your final scores are:\nAsteroids: " + std::to_string(m_asteroids.GetScore()) + "\nMinesweeper: " + std::to_string(int(m_minesweeper.GetTime())) + "s");
+        pauseText.setString("Your final scores are:\nAsteroids: " + std::to_string(m_asteroids.GetScore()) + "\nMinesweeper: " + std::to_string(int(m_minesweeper.GetTime())) + "s (on a " + std::to_string(m_minesweeper.GetCurSize()) + "x" + std::to_string(m_minesweeper.GetCurSize()) + " board)");
+        rect = pauseText.getLocalBounds();
+        pauseText.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+        rt.draw(pauseText);
+
+        pauseText.setString("Change difficulty;\nMinesweeper board size: " + std::to_string(m_minesweeper.GetSize()) + " (up/down)");
+        pauseText.move(0, rect.top + rect.height + 20);
         rect = pauseText.getLocalBounds();
         pauseText.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
         rt.draw(pauseText);
