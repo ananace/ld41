@@ -194,6 +194,12 @@ sf::View& Application::GetGameView() { return m_gameView; }
 const sf::View& Application::GetGameView() const { return m_gameView; }
 sf::View& Application::GetUIView() { return m_uiView; }
 const sf::View& Application::GetUIView() const { return m_uiView; }
+InputManager& Application::GetInputManager() { return m_inputMan; }
+const InputManager& Application::GetInputManager() const { return m_inputMan; }
+StateManager& Application::GetStateManager() { return m_stateMan; }
+const StateManager& Application::GetStateManager() const { return m_stateMan; }
+Profiler& Application::GetProfiler() { return m_profiler; }
+const Profiler& Application::GetProfiler() const { return m_profiler; }
 
 const Application& Application::GetSingleton()
 {

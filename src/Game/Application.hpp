@@ -27,6 +27,12 @@ public:
     const sf::View& GetGameView() const;
     sf::View& GetUIView();
     const sf::View& GetUIView() const;
+    InputManager& GetInputManager();
+    const InputManager& GetInputManager() const;
+    StateManager& GetStateManager();
+    const StateManager& GetStateManager() const;
+    Profiler& GetProfiler();
+    const Profiler& GetProfiler() const;
 
     static const Application& GetSingleton();
 
