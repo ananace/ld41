@@ -22,6 +22,8 @@ template<typename T>
 T lengthSquared(const sf::Vector2<T>& inp);
 template<typename T>
 T length(const sf::Vector2<T>& inp);
+template<typename T>
+T distance(const sf::Vector2<T>& inp1, const sf::Vector2<T>& inp2);
 
 }
 

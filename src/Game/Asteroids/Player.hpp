@@ -15,6 +15,7 @@ public:
 
     void Update();
     void AddImpulse(float force);
+    const sf::Vector2f& GetVelocity() const;
 
     void draw(sf::RenderTarget&, sf::RenderStates) const;
 

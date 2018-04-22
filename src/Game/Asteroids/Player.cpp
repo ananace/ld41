@@ -70,6 +70,11 @@ void Player::AddImpulse(float force)
     m_velocity += sf::Vector2f(cos(ang) * force, sin(ang) * force);
 }
 
+const sf::Vector2f& Player::GetVelocity() const
+{
+    return m_velocity;
+}
+
 void Player::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
     auto& inp = Application::GetSingleton().GetInputManager();

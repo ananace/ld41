@@ -10,10 +10,15 @@ namespace Asteroids
 class Asteroid : public sf::Drawable, public sf::Transformable
 {
 public:
+    enum
+    {
+        k_asteroidLifetime = 30
+    };
     Asteroid(float size);
     ~Asteroid();
 
     void Update();
+    bool IsAlive() const;
 
     float GetSize() const;
     const sf::Vector2f& GetVelocity() const;
@@ -24,7 +29,7 @@ public:
     void draw(sf::RenderTarget&, sf::RenderStates) const;
 
 private:
-    float m_size, m_rotSpeed;
+    float m_size, m_rotSpeed, m_life;
     sf::Vector2f m_velocity;
     sf::ConvexShape m_vertices;
 };

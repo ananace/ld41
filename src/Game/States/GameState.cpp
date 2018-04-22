@@ -4,11 +4,11 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "Minesweeper/Level.hpp"
-#include "Asteroids/Player.hpp"
+#include "Asteroids/Level.hpp"
 
 #include <random>
 
-Asteroids::Player player;
+Asteroids::Level player;
 Minesweeper::Level level({30, 30});
 float rtime = 0;
 
@@ -16,7 +16,6 @@ GameState::GameState()
 {
     level.setPosition({ 15, 15 });
     level.setScale(0.5f, 0.5f);
-    player.setPosition({ 30, 30 });
 }
 GameState::~GameState()
 {
@@ -60,5 +59,9 @@ void GameState::Draw(sf::RenderTarget& rt) const
 void GameState::DrawUI(sf::RenderTarget& rt) const
 {
     rt.draw(level);
+    auto view = rt.getView();
+    view.setCenter(player.GetPlayerPosition());
+    rt.setView(view);
     rt.draw(player);
+    
 }
