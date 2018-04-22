@@ -45,5 +45,11 @@ void GameState::Draw(sf::RenderTarget& rt) const
 
 void GameState::DrawUI(sf::RenderTarget& rt) const
 {
+    sf::View asView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
+    asView.setViewport({ 0, 0, 0.5, 1 });
+    sf::View msView({ 0, 0, float(rt.getSize().x) / 2.f, float(rt.getSize().y) });
+    msView.setViewport({ 0.5, 0, 1, 1 });
+
+    asteroids.DrawUI(rt);
     game.DrawUI(rt);
 }

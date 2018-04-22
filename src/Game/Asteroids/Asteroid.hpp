@@ -12,7 +12,7 @@ class Asteroid : public sf::Drawable, public sf::Transformable
 public:
     enum
     {
-        k_asteroidLifetime = 30
+        k_asteroidLifetime = 120
     };
     Asteroid(float size);
     ~Asteroid();

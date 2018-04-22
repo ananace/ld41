@@ -24,6 +24,9 @@ void Game::Update()
     if (inp[Input_Action].IsPressStart())
         m_level.FireBullet();
     m_level.Update();
+    
+    if (m_level.IsDead())
+        m_level.Reset();
 }
 
 void Game::Draw(sf::RenderTarget& rt)

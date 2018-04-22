@@ -16,6 +16,7 @@ Level::Level()
     : m_asteroidTimer(0)
     , m_starfield1(sf::Points, 0)
     , m_starfield2(sf::Points, 0)
+    , m_isDead(false)
 {
     Reset();
 }
@@ -29,14 +30,18 @@ void Level::Update()
     float dt = Application::GetSingleton().GetStateManager().GetFrameTimeDT();
     m_asteroidTimer += dt;
 
-    if (m_asteroidTimer >= 5.f)
+    if (m_asteroidTimer >= 2.5f)
     {
         m_asteroidTimer = 0;
         if (m_asteroids.size() < k_maxAsteroidCount)
         {
             std::random_device dev;
             Asteroid toAdd(std::uniform_real_distribution<float>(30, 100)(dev));
-            float ang = std::uniform_real_distribution<float>(0, Math::PI<float>() * 2.f)(dev);
+            std::uniform_real_distribution<float> rad(0, Math::PI<float>() * 2.f);
+            float ang = rad(dev);
+            toAdd.setPosition(m_player.getPosition() + sf::Vector2f(cos(ang) * 800, sin(ang) * 800));
+            toAdd.AddImpulse({ float(cos(ang) * -50.f), float(sin(ang) * -50.f) });
+            ang = rad(dev);
             float force = std::uniform_real_distribution<float>(5, 50)(dev);
             toAdd.AddImpulse({ float(cos(ang) * force), float(sin(ang) * force) });
 
@@ -46,6 +51,8 @@ void Level::Update()
         }
     }
 
+    sf::FloatRect playArea(-1000, -1000, 2000, 2000);
+
     for (auto ait = m_asteroids.begin(); ait != m_asteroids.end();)
     {
         auto& obj = *ait;
@@ -54,7 +61,18 @@ void Level::Update()
         if (!obj.IsAlive())
             ait = m_asteroids.erase(ait);
         else
+        {
+            if (!playArea.contains(obj.getPosition()))
+            {
+                auto pos = obj.getPosition();
+                if (pos.x <= -1000 || pos.x >= 1000)
+                    pos.x = std::max(-1000.f, std::min(1000.f, -pos.x));
+                if (pos.y <= -1000 || pos.y >= 1000)
+                    pos.y = std::max(-1000.f, std::min(1000.f, -pos.y));
+                obj.setPosition(pos);
+            }
             ++ait;
+        }
     }
     for (auto bit = m_bullets.begin(); bit != m_bullets.end();)
     {
@@ -62,19 +80,29 @@ void Level::Update()
         obj.Pos += obj.Vel * dt;
         obj.Life += dt;
 
-        if (obj.Life >= 5.f)
+        if (obj.Life >= 6.f)
             bit = m_bullets.erase(bit);
         else
+        {
+            if (!playArea.contains(obj.Pos))
+            {
+                auto& pos = obj.Pos;
+                if (pos.x <= -1000 || pos.x >= 1000)
+                    pos.x = std::max(-1000.f, std::min(1000.f, -pos.x));
+                if (pos.y <= -1000 || pos.y >= 1000)
+                    pos.y = std::max(-1000.f, std::min(1000.f, -pos.y));
+            }
             ++bit;
+        }
     }
     m_player.Update();
-    if (!sf::FloatRect(-1000, -1000, 2000, 2000).contains(m_player.getPosition()))
+    if (!playArea.contains(m_player.getPosition()))
     {
         auto pos = m_player.getPosition();
         if (pos.x <= -1000 || pos.x >= 1000)
-            pos.x = -pos.x;
+            pos.x = std::max(-1000.f, std::min(1000.f, -pos.x));
         if (pos.y <= -1000 || pos.y >= 1000)
-            pos.y = -pos.y;
+            pos.y = std::max(-1000.f, std::min(1000.f, -pos.y));
         m_player.setPosition(pos);
     }
 
@@ -102,7 +130,8 @@ void Level::Update()
         {
             if (Math::distance(obj.getPosition(), m_player.getPosition()) <= obj.GetSize())
             {
-                ++ait; // TODO: Explode player
+                m_isDead = true;
+                ++ait;
             }
             else
                 ++ait;
@@ -115,8 +144,9 @@ void Level::Update()
             std::uniform_real_distribution<float> force(5, 50);
 
             float newRad = obj.GetSize() / split;
-            
+
             if (newRad > 5)
+            {
                 for (int i = 0; i < split; ++i)
                 {
                     Asteroid newAss(newRad);
@@ -128,6 +158,9 @@ void Level::Update()
 
                     m_asteroids.push_back(newAss);
                 }
+                ait = m_asteroids.erase(ait);
+                break; // To avoid iteration issues
+            }
 
             ait = m_asteroids.erase(ait);
         }
@@ -136,6 +169,10 @@ void Level::Update()
 
 void Level::Reset()
 {
+    m_isDead = false;
+
+    m_player = Player();
+
     m_asteroids.clear();
     m_bullets.clear();
     m_asteroids.reserve(k_maxAsteroidCount * 3);
@@ -154,6 +191,11 @@ void Level::Reset()
     m_starfield2.resize(500);
     for (size_t i = 0; i < m_starfield2.getVertexCount(); ++i)
         m_starfield2[i] = sf::Vertex({ size(dev), size(dev) }, { 90, 90, 90 });
+}
+
+bool Level::IsDead()
+{
+    return m_isDead;
 }
 
 void Level::FireBullet()

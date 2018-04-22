@@ -26,6 +26,8 @@ public:
     void Update();
     void Reset();
 
+    bool IsDead();
+
     void FireBullet();
     const sf::Vector2f& GetPlayerPosition() const;
 
@@ -44,6 +46,7 @@ private:
     std::vector<Bullet> m_bullets;
     Player m_player;
 
+    bool m_isDead;
     float m_asteroidTimer;
     sf::VertexArray m_starfield1, m_starfield2;
 };
