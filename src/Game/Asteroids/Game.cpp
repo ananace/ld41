@@ -1,5 +1,7 @@
 #include "Game.hpp"
 
+#include <Application.hpp>
+#include <Inputs.hpp>
 #include <Math.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -17,6 +19,10 @@ Game::~Game()
 
 void Game::Update()
 {
+    auto& inp = Application::GetSingleton().GetInputManager();
+
+    if (inp[Input_Action].IsPressStart())
+        m_level.FireBullet();
     m_level.Update();
 }
 

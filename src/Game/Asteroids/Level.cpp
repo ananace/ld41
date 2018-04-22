@@ -21,13 +21,12 @@ Level::Level()
 }
 Level::~Level()
 {
-    
+
 }
 
 void Level::Update()
 {
     float dt = Application::GetSingleton().GetStateManager().GetFrameTimeDT();
-    auto& inp = Application::GetSingleton().GetInputManager();
     m_asteroidTimer += dt;
 
     if (m_asteroidTimer >= 5.f)
@@ -45,13 +44,6 @@ void Level::Update()
 
             m_asteroids.push_back(toAdd);
         }
-    }
-
-    if (inp[Input_Action].IsPressStart() && m_bullets.size() < k_maxBulletCount)
-    {
-        float ang = m_player.getRotation() * (Math::PI<float>() / 180.f);
-        sf::Vector2f dir(cos(ang), sin(ang));
-        m_bullets.push_back({ m_player.getPosition() + dir * 20.f, m_player.GetVelocity() + dir * 250.f, 0.f });
     }
 
     for (auto ait = m_asteroids.begin(); ait != m_asteroids.end();)
@@ -144,6 +136,16 @@ void Level::Reset()
     m_starfield2.resize(500);
     for (size_t i = 0; i < m_starfield2.getVertexCount(); ++i)
         m_starfield2[i] = sf::Vertex({ size(dev), size(dev) }, { 128, 128, 128 });
+}
+
+void Level::FireBullet()
+{
+    if (m_bullets.size() >= k_maxBulletCount)
+        return;
+
+    float ang = m_player.getRotation() * (Math::PI<float>() / 180.f);
+    sf::Vector2f dir(cos(ang), sin(ang));
+    m_bullets.push_back({ m_player.getPosition() + dir * 20.f, m_player.GetVelocity() + dir * 250.f, 0.f });
 }
 
 const sf::Vector2f& Level::GetPlayerPosition() const

@@ -26,6 +26,7 @@ public:
     void Update();
     void Reset();
 
+    void FireBullet();
     const sf::Vector2f& GetPlayerPosition() const;
 
     /// \note The name is for sf::Drawable
