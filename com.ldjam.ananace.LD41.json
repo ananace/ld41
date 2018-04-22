@@ -30,6 +30,14 @@
                     "type": "git",
                     "url": "https://github.com/ananace/ld41.git",
                     "tag": "master"
+                },
+                {
+                    "type": "file",
+                    "path": "flatpak/com.ldjam.ananace.LD41.desktop"
+                },
+                {
+                    "type": "file",
+                    "path": "flatpak/com.ldjam.ananace.LD41.png"
                 }
             ]
         }
