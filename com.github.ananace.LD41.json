@@ -4,7 +4,7 @@
     "runtime": "org.gnome.Platform",
     "runtime-version": "3.28",
     "sdk": "org.gnome.Sdk",
-    "command": "ld41",
+    "command": "LD41",
     "finish-args": [
         "--share=ipc", "--socket=x11", "--device=dri"
     ],
