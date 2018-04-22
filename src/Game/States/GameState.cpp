@@ -4,9 +4,11 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "Minesweeper/Level.hpp"
+#include "Asteroids/Player.hpp"
 
 #include <random>
 
+Asteroids::Player player;
 Minesweeper::Level level({30, 30});
 float rtime = 0;
 
@@ -14,6 +16,7 @@ GameState::GameState()
 {
     level.setPosition({ 15, 15 });
     level.setScale(0.5f, 0.5f);
+    player.setPosition({ 30, 30 });
 }
 GameState::~GameState()
 {
@@ -32,6 +35,8 @@ void GameState::Update()
         std::uniform_int_distribution<unsigned int> dist(0, 29);
         level.Reveal({ dist(dev), dist(dev) });
     }
+    
+    player.Update();
 }
 
 void GameState::Draw(sf::RenderTarget& rt) const
@@ -55,4 +60,5 @@ void GameState::Draw(sf::RenderTarget& rt) const
 void GameState::DrawUI(sf::RenderTarget& rt) const
 {
     rt.draw(level);
+    rt.draw(player);
 }
