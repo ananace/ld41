@@ -42,7 +42,7 @@ void MenuState::DrawUI(sf::RenderTarget& rt) const
     rt.draw(background);
 
     sf::Text title("AsteroidSweeper xTreme", Application::GetSingleton().GetDefaultFont());
-    title.setCharacterSize(32);
+    title.setCharacterSize(38);
     title.setOutlineColor(sf::Color::Black);
     title.setOutlineThickness(2.5f);
     title.setRotation(-29.f);
@@ -68,4 +68,23 @@ void MenuState::DrawUI(sf::RenderTarget& rt) const
     anyKey.setFillColor(sf::Color::Black);
     rt.draw(anyKey);
 
+    sf::Text sweeperControls("    Arrow keys to move,\ntap space to reveal a square,\n  long tap space to flag it.\n\n    Don't hit the mines.", Application::GetSingleton().GetDefaultFont());
+    sweeperControls.setRotation(-29.f);
+    sweeperControls.setOutlineColor(sf::Color::White);
+    sweeperControls.setOutlineThickness(2.5f);
+    sweeperControls.setFillColor(sf::Color::Black);
+    rect = sweeperControls.getLocalBounds();
+    sweeperControls.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+    sweeperControls.setPosition({ rt.getView().getCenter().x + rt.getView().getSize().x / 6.f, rt.getView().getSize().y / 1.65f });
+    rt.draw(sweeperControls);
+
+    sf::Text asteroidsControls("Arrow keys to move,\n  space to fire.\n\nAvoid the asteroids.", Application::GetSingleton().GetDefaultFont());
+    asteroidsControls.setRotation(-29.f);
+    asteroidsControls.setOutlineColor(sf::Color::Black);
+    asteroidsControls.setOutlineThickness(2.5f);
+    asteroidsControls.setFillColor(sf::Color::White);
+    rect = asteroidsControls.getLocalBounds();
+    asteroidsControls.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
+    asteroidsControls.setPosition({ rt.getView().getCenter().x - rt.getView().getSize().x / 6.f, rt.getView().getSize().y / 2.65f });
+    rt.draw(asteroidsControls);
 }
