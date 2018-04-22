@@ -41,10 +41,10 @@ if(NOT GIT_SHA1)
 endif()
 
 # Meta information about the project
-set(META_PROJECT_NAME        "LD00")
-set(META_PROJECT_DESCRIPTION "Ludum Dare #00")
+set(META_PROJECT_NAME        "LD41")
+set(META_PROJECT_DESCRIPTION "Ludum Dare #41")
 set(META_AUTHOR_NAME         "Introvert Software")
-set(META_AUTHOR_DOMAIN       "https://github.com/ananace/LD00")
+set(META_AUTHOR_DOMAIN       "https://github.com/ananace/ld41")
 set(META_VERSION_MAJOR       "0")
 set(META_VERSION_MINOR       "0")
 set(META_VERSION_PATCH       "1")

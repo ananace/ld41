@@ -52,10 +52,10 @@ void MenuState::DrawUI(sf::RenderTarget& rt) const
     title.setPosition(rt.getView().getCenter());
     rt.draw(title);
 
-    sf::Text anyKey("< Press Space To Start >", Application::GetSingleton().GetDefaultFont());
+    sf::Text anyKey("< Press Space To Start, Esc To Pause >", Application::GetSingleton().GetDefaultFont());
     anyKey.setCharacterSize(18);
     anyKey.setOutlineColor(sf::Color::Black);
-    anyKey.setOutlineThickness(1.5f);
+    anyKey.setOutlineThickness(1.75f);
 
     rect = anyKey.getLocalBounds();
     anyKey.setOrigin({ (rect.left + rect.width) / 2.f, (rect.top + rect.height) / 2.f });
