@@ -154,7 +154,7 @@ private:
     std::unordered_map<std::size_t, std::string> m_sectionNames;
 };
 
-std::size_t constexpr operator "" _profile(const char* str, unsigned long) {
+std::size_t constexpr operator "" _profile(const char* str, size_t) {
   return Profiler::SectionHasher()(str);
 }
 
