@@ -138,7 +138,8 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 
-    sf::RectangleShape background({ m_size.x * 65.75f, m_size.y * 65.75f });
+    sf::RectangleShape background({ m_size.x * 65.75f + 1.75f, m_size.y * 65.75f + 1.75f });
+    background.move(-1.75f, -1.75f);
     background.setFillColor({ 0x80, 0x80, 0x80 });
     rt.draw(background, states);
 

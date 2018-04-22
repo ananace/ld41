@@ -2,6 +2,7 @@
 
 #include <Application.hpp>
 #include <Inputs.hpp>
+#include <Math.hpp>
 
 #include <SFML/Graphics/RectangleShape.hpp>
 
@@ -52,7 +53,7 @@ void Game::Update()
 void Game::Draw(sf::RenderTarget& rt)
 {
     sf::RectangleShape background(rt.getView().getSize());
-    background.setFillColor(sf::Color::White);
+    background.setFillColor({ 0xe0, 0xe0, 0xe0 });
     rt.draw(background);
 
     sf::RectangleShape cursor({ 64, 64 });
@@ -62,8 +63,12 @@ void Game::Draw(sf::RenderTarget& rt)
     cursor.setPosition(sf::Vector2f(m_cursor) * 65.75f);
 
     auto view = rt.getView();
+    auto hvsize = view.getSize() / 4.f;
+    auto lsize = sf::Vector2f(m_level.GetSize()) * 65.75f;
+    sf::FloatRect viewLimit(hvsize.x, hvsize.y, lsize.x - hvsize.x * 2, lsize.y - hvsize.y * 2);
+
     view.setSize(view.getSize().x * 2.f, view.getSize().y);
-    view.setCenter(cursor.getPosition() + sf::Vector2f(view.getSize().x / 4.f, 0));
+    view.setCenter(Math::constrain(viewLimit, cursor.getPosition() + sf::Vector2f(32, 32)) + sf::Vector2f(view.getSize().x / 4.f, 0));
     rt.setView(view);
 
     rt.draw(m_level);
@@ -72,5 +77,5 @@ void Game::Draw(sf::RenderTarget& rt)
 }
 void Game::DrawUI(sf::RenderTarget& rt)
 {
-    
+
 }

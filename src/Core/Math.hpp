@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 
 #include <cmath>
@@ -24,6 +25,9 @@ template<typename T>
 T length(const sf::Vector2<T>& inp);
 template<typename T>
 T distance(const sf::Vector2<T>& inp1, const sf::Vector2<T>& inp2);
+
+template<typename T>
+sf::Vector2<T> constrain(const sf::Rect<T>& rect, const sf::Vector2<T>& point);
 
 }
 
