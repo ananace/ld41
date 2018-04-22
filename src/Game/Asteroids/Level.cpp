@@ -51,7 +51,7 @@ void Level::Update()
     {
         float ang = m_player.getRotation() * (Math::PI<float>() / 180.f);
         sf::Vector2f dir(cos(ang), sin(ang));
-        m_bullets.push_back({ m_player.getPosition() + dir * 20.f, m_player.GetVelocity() + dir * 125.f, 0.f });
+        m_bullets.push_back({ m_player.getPosition() + dir * 20.f, m_player.GetVelocity() + dir * 250.f, 0.f });
     }
 
     for (auto ait = m_asteroids.begin(); ait != m_asteroids.end();)
@@ -153,8 +153,8 @@ const sf::Vector2f& Level::GetPlayerPosition() const
 
 void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
-    rt.draw(m_starfield1, states);
-    auto parallaxstate = states;
+    sf::RenderStates parallaxstate;
+    rt.draw(m_starfield1, parallaxstate);
     parallaxstate.transform.translate(m_player.getPosition() / 4.f);
     rt.draw(m_starfield2, parallaxstate);
 

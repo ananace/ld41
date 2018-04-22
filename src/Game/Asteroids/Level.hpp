@@ -17,7 +17,7 @@ public:
     enum
     {
         k_maxAsteroidCount = 10,
-        k_maxBulletCount = 10
+        k_maxBulletCount = 15
     };
 
     Level();
