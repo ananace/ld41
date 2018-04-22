@@ -16,7 +16,7 @@ class Level : public sf::Drawable
 public:
     enum
     {
-        k_maxAsteroidCount = 10,
+        k_maxAsteroidCount = 20,
         k_maxBulletCount = 15
     };
 

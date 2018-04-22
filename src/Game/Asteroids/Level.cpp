@@ -35,9 +35,9 @@ void Level::Update()
         if (m_asteroids.size() < k_maxAsteroidCount)
         {
             std::random_device dev;
-            Asteroid toAdd(std::uniform_real_distribution<float>(0.75f, 1.25f)(dev) * 37.5f);
+            Asteroid toAdd(std::uniform_real_distribution<float>(30, 100)(dev));
             float ang = std::uniform_real_distribution<float>(0, Math::PI<float>() * 2.f)(dev);
-            float force = std::uniform_real_distribution<float>(5, 20)(dev);
+            float force = std::uniform_real_distribution<float>(5, 50)(dev);
             toAdd.AddImpulse({ float(cos(ang) * force), float(sin(ang) * force) });
 
             // TODO: Create in a large circle around the player, in a player-heading direction
@@ -109,7 +109,25 @@ void Level::Update()
         }
         else
         {
-            // TODO: Explode asteroid
+            std::random_device dev;
+            int split = std::uniform_int_distribution<>(2,4)(dev);
+            std::uniform_real_distribution<float> dir(0, Math::PI<float>());
+            std::uniform_real_distribution<float> force(5, 50);
+
+            float newRad = obj.GetSize() / split;
+            
+            if (newRad > 5)
+                for (int i = 0; i < split; ++i)
+                {
+                    Asteroid newAss(newRad);
+                    newAss.setPosition(obj.getPosition());
+                    newAss.AddImpulse(obj.GetVelocity());
+                    float ang = dir(dev);
+                    float mult = force(dev);
+                    newAss.AddImpulse(sf::Vector2f(cos(ang) * mult, sin(ang) * mult));
+
+                    m_asteroids.push_back(newAss);
+                }
 
             ait = m_asteroids.erase(ait);
         }
@@ -135,7 +153,7 @@ void Level::Reset()
     m_starfield2.clear();
     m_starfield2.resize(500);
     for (size_t i = 0; i < m_starfield2.getVertexCount(); ++i)
-        m_starfield2[i] = sf::Vertex({ size(dev), size(dev) }, { 128, 128, 128 });
+        m_starfield2[i] = sf::Vertex({ size(dev), size(dev) }, { 90, 90, 90 });
 }
 
 void Level::FireBullet()
@@ -157,7 +175,7 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
     sf::RenderStates parallaxstate;
     rt.draw(m_starfield1, parallaxstate);
-    parallaxstate.transform.translate(m_player.getPosition() / 4.f);
+    parallaxstate.transform.translate(rt.getView().getCenter() / 4.f);
     rt.draw(m_starfield2, parallaxstate);
 
     for (auto& obj : m_asteroids)
