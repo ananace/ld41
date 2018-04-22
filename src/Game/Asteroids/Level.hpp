@@ -26,7 +26,8 @@ public:
     void Update();
     void Reset();
 
-    bool IsDead();
+    bool IsDead() const;
+    int GetScore() const;
 
     void FireBullet();
     const sf::Vector2f& GetPlayerPosition() const;
@@ -45,6 +46,8 @@ private:
     std::vector<Asteroid> m_asteroids;
     std::vector<Bullet> m_bullets;
     Player m_player;
+
+    int m_score;
 
     bool m_isDead;
     float m_asteroidTimer;

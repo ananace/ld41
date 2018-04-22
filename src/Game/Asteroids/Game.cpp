@@ -24,9 +24,21 @@ void Game::Update()
     if (inp[Input_Action].IsPressStart())
         m_level.FireBullet();
     m_level.Update();
-    
-    if (m_level.IsDead())
-        m_level.Reset();
+}
+
+void Game::Reset()
+{
+    m_level.Reset();
+}
+
+bool Game::IsOver() const
+{
+    return m_level.IsDead();
+}
+
+int Game::GetScore() const
+{
+    return m_level.GetScore();
 }
 
 void Game::Draw(sf::RenderTarget& rt) const

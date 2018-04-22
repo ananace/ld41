@@ -2,6 +2,7 @@
 #include "../Application.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
 #include <random>
@@ -14,6 +15,8 @@ Level::Level(const sf::Vector2u& size, unsigned int mineCount)
     , m_mineCount(mineCount)
 {
     Reset();
+
+    m_bombTexture.loadFromFile("resources/bomb.png");
 }
 
 Level::~Level()
@@ -180,6 +183,8 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
     dropEffect.append(sf::Vertex({62, 62}, sf::Color(0xe0, 0xe0, 0xe0)));
     dropEffect.append(sf::Vertex({2, 62}, sf::Color(0xe0, 0xe0, 0xe0)));
 
+    sf::VertexArray mineVerts(sf::Triangles, 6);
+
     sf::Vector2f startPos(32.f, 32.f);
     for (size_t i = 0; i < m_field.size(); ++i)
     {
@@ -222,7 +227,18 @@ void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
         }
 
         if (m_field[i] & k_flagRevealed)
+        {
             rt.draw(revealText, states);
+
+            if (m_field[i] & k_flagMine)
+            {
+                sf::Sprite bomb(m_bombTexture);
+                bomb.setOrigin(sf::Vector2f(m_bombTexture.getSize()) / 2.f);
+                bomb.setPosition(boxShape.getPosition());
+                bomb.setScale(2.f, 2.f);
+                rt.draw(bomb, states);
+            }
+        }
     }
 }
 

@@ -19,10 +19,17 @@ public:
     const char* GetName() const { return "GameState"; }
 
 private:
+    enum Reason : uint8_t
+    {
+        Reason_Asteroids,
+        Reason_Minesweeper,
+    };
+
     Asteroids::Game m_asteroids;
     Minesweeper::Game m_minesweeper;
 
-    bool m_paused;
+    bool m_paused, m_gameover, m_won;
+    Reason m_reason;
 
     float m_pauseTime, m_cumulativePauseTime;
 };

@@ -12,6 +12,11 @@ public:
     ~Game();
 
     void Update();
+    void Reset();
+
+    bool IsOver() const;
+    bool IsWon() const;
+    float GetTime() const;
 
     void Draw(sf::RenderTarget&) const;
     void DrawUI(sf::RenderTarget&) const;
@@ -19,7 +24,7 @@ public:
 private:
     Level m_level;
     sf::Vector2u m_cursor;
-    float m_pressLength;
+    float m_pressLength, m_time;
 };
 
 }

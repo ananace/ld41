@@ -10,6 +10,7 @@ using namespace Minesweeper;
 
 Game::Game()
     : m_pressLength(0)
+    , m_time(0)
 {
     
 }
@@ -22,6 +23,8 @@ void Game::Update()
 {
     float dt = Application::GetSingleton().GetStateManager().GetFrameTimeDT();
     auto& inp = Application::GetSingleton().GetInputManager();
+
+    m_time += dt;
 
     sf::Vector2i delta(inp[Input_Right].IsPressStart() - inp[Input_Left].IsPressStart(), inp[Input_Down].IsPressStart() - inp[Input_Up].IsPressStart());
     sf::Vector2i newCursor(m_cursor);
@@ -48,11 +51,27 @@ void Game::Update()
         else
             m_level.Mark(m_cursor);
     }
+}
 
-    if (m_level.IsLost())
-        m_level.Reset();
-    if (m_level.IsWon())
-        m_level.Reset();
+void Game::Reset()
+{
+    m_level.Reset();
+    m_time = 0;
+}
+
+bool Game::IsOver() const
+{
+    return m_level.IsLost() || m_level.IsWon();
+}
+
+bool Game::IsWon() const
+{
+    return m_level.IsWon();
+}
+
+float Game::GetTime() const
+{
+    return m_time;
 }
 
 void Game::Draw(sf::RenderTarget& rt) const

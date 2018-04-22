@@ -12,6 +12,10 @@ public:
     ~Game();
 
     void Update();
+    void Reset();
+
+    bool IsOver() const;
+    int GetScore() const;
 
     void Draw(sf::RenderTarget&) const;
     void DrawUI(sf::RenderTarget&) const;

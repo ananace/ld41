@@ -13,10 +13,11 @@
 using namespace Asteroids;
 
 Level::Level()
-    : m_asteroidTimer(0)
+    : m_score(0)
+    , m_isDead(false)
+    , m_asteroidTimer(0)
     , m_starfield1(sf::Points, 0)
     , m_starfield2(sf::Points, 0)
-    , m_isDead(false)
 {
     Reset();
 }
@@ -142,6 +143,7 @@ void Level::Update()
             int split = std::uniform_int_distribution<>(2,4)(dev);
             std::uniform_real_distribution<float> dir(0, Math::PI<float>());
             std::uniform_real_distribution<float> force(5, 50);
+            m_score += 100;
 
             float newRad = obj.GetSize() / split;
 
@@ -170,6 +172,7 @@ void Level::Update()
 void Level::Reset()
 {
     m_isDead = false;
+    m_score = 0;
 
     m_player = Player();
 
@@ -193,9 +196,14 @@ void Level::Reset()
         m_starfield2[i] = sf::Vertex({ size(dev), size(dev) }, { 90, 90, 90 });
 }
 
-bool Level::IsDead()
+bool Level::IsDead() const
 {
     return m_isDead;
+}
+
+int Level::GetScore() const
+{
+    return m_score;
 }
 
 void Level::FireBullet()
