@@ -20,7 +20,7 @@ Player::Player()
     m_shipShape.setPoint(2, { 0, 5 });
     m_shipShape.setPoint(3, { -10, 10 });
 
-    m_shipShape.setFillColor(sf::Color::Transparent);
+    m_shipShape.setFillColor(sf::Color::Black);
     m_shipShape.setOutlineColor(sf::Color::White);
     m_shipShape.setOutlineThickness(1.5f);
 
@@ -36,7 +36,7 @@ Player::Player()
 
     m_exhaustShape.move(-17, 0);
 
-    m_exhaustShape.setFillColor(sf::Color::Transparent);
+    m_exhaustShape.setFillColor(sf::Color::Black);
     m_exhaustShape.setOutlineColor({ 16, 196, 255 });
     m_exhaustShape.setOutlineThickness(1.5f);
 
@@ -54,7 +54,7 @@ void Player::Update()
     if (inp[Input_Up].IsPressed())
     {
         m_burnTime = std::max(0.5f, std::min(1.f, m_burnTime + dt * 0.75f));
-        AddImpulse(m_burnTime * 20 * dt);
+        AddImpulse(m_burnTime * 50 * dt);
     }
     else
         m_burnTime = 0;

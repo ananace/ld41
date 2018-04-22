@@ -58,10 +58,9 @@ void GameState::Draw(sf::RenderTarget& rt) const
 
 void GameState::DrawUI(sf::RenderTarget& rt) const
 {
-    rt.draw(level);
+    //rt.draw(level);
     auto view = rt.getView();
     view.setCenter(player.GetPlayerPosition());
     rt.setView(view);
     rt.draw(player);
-    
 }

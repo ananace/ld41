@@ -3,6 +3,7 @@
 namespace sf { class View; }
 
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 #include "Asteroid.hpp"
 #include "Player.hpp"
@@ -43,6 +44,7 @@ private:
     Player m_player;
 
     float m_asteroidTimer;
+    sf::VertexArray m_starfield;
 };
 
 }

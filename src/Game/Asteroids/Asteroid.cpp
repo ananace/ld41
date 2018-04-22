@@ -26,7 +26,7 @@ Asteroid::Asteroid(float size)
 
         m_vertices.setPoint(i, pos * m_size * std::uniform_real_distribution<float>(0.75f, 1.25f)(dev));
     }
-    m_vertices.setFillColor(sf::Color::Transparent);
+    m_vertices.setFillColor(sf::Color::Black);
     m_vertices.setOutlineColor(sf::Color::White);
     m_vertices.setOutlineThickness(1.5f);
 }

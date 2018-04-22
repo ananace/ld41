@@ -14,6 +14,7 @@ using namespace Asteroids;
 
 Level::Level()
     : m_asteroidTimer(0)
+    , m_starfield(sf::Points, 0)
 {
     Reset();
 }
@@ -49,7 +50,7 @@ void Level::Update()
     {
         float ang = m_player.getRotation() * (Math::PI<float>() / 180.f);
         sf::Vector2f dir(cos(ang), sin(ang));
-        m_bullets.push_back({ m_player.getPosition() + dir * 20.f, m_player.GetVelocity() + dir * 75.f, 0.f });
+        m_bullets.push_back({ m_player.getPosition() + dir * 20.f, m_player.GetVelocity() + dir * 125.f, 0.f });
     }
 
     for (auto ait = m_asteroids.begin(); ait != m_asteroids.end();)
@@ -74,6 +75,15 @@ void Level::Update()
             ++bit;
     }
     m_player.Update();
+    if (!sf::FloatRect(-1000, -1000, 2000, 2000).contains(m_player.getPosition()))
+    {
+        auto pos = m_player.getPosition();
+        if (pos.x <= -1000 || pos.x >= 1000)
+            pos.x = -pos.x;
+        if (pos.y <= -1000 || pos.y >= 1000)
+            pos.y = -pos.y;
+        m_player.setPosition(pos);
+    }
 
     // Collision detection
     for (auto ait = m_asteroids.cbegin(); ait != m_asteroids.cend();)
@@ -120,6 +130,16 @@ void Level::Reset()
     m_asteroids.reserve(k_maxAsteroidCount * 3);
     m_bullets.reserve(k_maxBulletCount);
     m_asteroidTimer = 0;
+
+    std::random_device dev;
+    std::uniform_real_distribution<float> size(-1000, 1000);
+
+    m_starfield.clear();
+    m_starfield.resize(2500);
+    for (size_t i = 0; i < m_starfield.getVertexCount(); ++i)
+    {
+        m_starfield[i] = sf::Vertex({ size(dev), size(dev) });
+    }
 }
 
 const sf::Vector2f& Level::GetPlayerPosition() const
@@ -129,6 +149,8 @@ const sf::Vector2f& Level::GetPlayerPosition() const
 
 void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
+    rt.draw(m_starfield, states);
+
     for (auto& obj : m_asteroids)
         rt.draw(obj, states);
 
