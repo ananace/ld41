@@ -104,9 +104,23 @@ add_subdirectory(src)
 # 
 
 
-install(
-    FILES
-    resources/bomb.png
-    resources/MenuBackground.png
-    DESTINATION share/${META_PROJECT_NAME}/resources
-)
+if (UNIX)
+    install(
+        FILES
+        resources/bomb.png
+        resources/MenuBackground.png
+        DESTINATION share/${META_PROJECT_NAME}/resources
+    )
+
+    install(
+        FILES
+        dist/com.ldjam.ananace.LD41.desktop
+        DESTINATION share/applications
+    )
+
+    install(
+        FILES
+        dist/com.ldjam.ananace.LD41.png
+        DESTINATION share/icons/hicolor/32x32/apps
+    )
+endif()

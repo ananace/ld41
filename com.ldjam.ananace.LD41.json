@@ -18,8 +18,8 @@
         "Makefile"
     ],
     "modules": [
-	"flatpak/shared-modules/udev/udev-175.json",
-        "flatpak/sfml-2.4.2.json",
+	"dist/shared-modules/udev/udev-175.json",
+        "dist/sfml-2.4.2.json",
 
         {
             "name": "LD41",
@@ -30,14 +30,6 @@
                     "type": "git",
                     "url": "https://github.com/ananace/ld41.git",
                     "tag": "master"
-                },
-                {
-                    "type": "file",
-                    "path": "flatpak/com.ldjam.ananace.LD41.desktop"
-                },
-                {
-                    "type": "file",
-                    "path": "flatpak/com.ldjam.ananace.LD41.png"
                 }
             ]
         }
