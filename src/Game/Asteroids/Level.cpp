@@ -14,7 +14,8 @@ using namespace Asteroids;
 
 Level::Level()
     : m_asteroidTimer(0)
-    , m_starfield(sf::Points, 0)
+    , m_starfield1(sf::Points, 0)
+    , m_starfield2(sf::Points, 0)
 {
     Reset();
 }
@@ -134,12 +135,15 @@ void Level::Reset()
     std::random_device dev;
     std::uniform_real_distribution<float> size(-1000, 1000);
 
-    m_starfield.clear();
-    m_starfield.resize(2500);
-    for (size_t i = 0; i < m_starfield.getVertexCount(); ++i)
-    {
-        m_starfield[i] = sf::Vertex({ size(dev), size(dev) });
-    }
+    m_starfield1.clear();
+    m_starfield1.resize(1000);
+    for (size_t i = 0; i < m_starfield1.getVertexCount(); ++i)
+        m_starfield1[i] = sf::Vertex({ size(dev), size(dev) });
+
+    m_starfield2.clear();
+    m_starfield2.resize(500);
+    for (size_t i = 0; i < m_starfield2.getVertexCount(); ++i)
+        m_starfield2[i] = sf::Vertex({ size(dev), size(dev) }, { 128, 128, 128 });
 }
 
 const sf::Vector2f& Level::GetPlayerPosition() const
@@ -149,7 +153,10 @@ const sf::Vector2f& Level::GetPlayerPosition() const
 
 void Level::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
-    rt.draw(m_starfield, states);
+    rt.draw(m_starfield1, states);
+    auto parallaxstate = states;
+    parallaxstate.transform.translate(m_player.getPosition() / 4.f);
+    rt.draw(m_starfield2, parallaxstate);
 
     for (auto& obj : m_asteroids)
         rt.draw(obj, states);

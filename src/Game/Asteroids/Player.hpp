@@ -17,6 +17,8 @@ public:
     void AddImpulse(float force);
     const sf::Vector2f& GetVelocity() const;
 
+    sf::Vector2f GetParallaxPosition(int level) const;
+
     void draw(sf::RenderTarget&, sf::RenderStates) const;
 
 private:

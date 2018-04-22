@@ -44,7 +44,7 @@ private:
     Player m_player;
 
     float m_asteroidTimer;
-    sf::VertexArray m_starfield;
+    sf::VertexArray m_starfield1, m_starfield2;
 };
 
 }
